@@ -33,9 +33,7 @@ export default function Navbar() {
           <Link href="/vote" className="text-sm font-medium text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors">
             Vote
           </Link>
-          <Link href="/admin" className="text-sm font-medium text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors">
-            Admin Dashboard
-          </Link>
+
         </div>
 
         {/* Mobile Menu Toggle Button */}
@@ -67,13 +65,7 @@ export default function Navbar() {
             >
               Vote
             </Link>
-            <Link 
-              href="/admin" 
-              onClick={closeMenu}
-              className="block px-3 py-3 rounded-xl text-base font-medium text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
-            >
-              Admin Dashboard
-            </Link>
+
           </div>
         </div>
       )}

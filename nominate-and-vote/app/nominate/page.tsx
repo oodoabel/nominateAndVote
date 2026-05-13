@@ -2,7 +2,56 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { UserPlus, X, CheckCircle2, Search, Eye } from "lucide-react";
+import { UserPlus, X, CheckCircle2, Search, Eye, ChevronDown } from "lucide-react";
+
+// Award Categories
+type AwardGender = "male" | "female" | "all";
+interface AwardCategory {
+  id: number;
+  name: string;
+  gender: AwardGender;
+}
+
+const awardCategories: AwardCategory[] = [
+  // Unisex Awards (1-15)
+  { id: 1, name: "Most Popular", gender: "all" },
+  { id: 2, name: "Most Spiritual", gender: "all" },
+  { id: 3, name: "Best Dressed", gender: "all" },
+  { id: 4, name: "Most Friendly", gender: "all" },
+  { id: 5, name: "Most Likely to Succeed", gender: "all" },
+  { id: 6, name: "Life of the Party", gender: "all" },
+  { id: 7, name: "Most Talented", gender: "all" },
+  { id: 8, name: "Best Smile", gender: "all" },
+  { id: 9, name: "Most Hardworking", gender: "all" },
+  { id: 10, name: "Most Generous", gender: "all" },
+  { id: 11, name: "Best Leader", gender: "all" },
+  { id: 12, name: "Most Creative", gender: "all" },
+  { id: 13, name: "Best Couple (Him)", gender: "male" },
+  { id: 14, name: "Best Couple (Her)", gender: "female" },
+  { id: 15, name: "Most Prayerful", gender: "all" },
+  // Male-only Awards (16-25)
+  { id: 16, name: "Mr. NFCS", gender: "male" },
+  { id: 17, name: "Most Handsome", gender: "male" },
+  { id: 18, name: "Best Bro", gender: "male" },
+  { id: 19, name: "Most Gentle Guy", gender: "male" },
+  { id: 20, name: "Most Fashionable Guy", gender: "male" },
+  { id: 21, name: "Coolest Guy", gender: "male" },
+  { id: 22, name: "Most Caring Bro", gender: "male" },
+  { id: 23, name: "Ladies' Man", gender: "male" },
+  { id: 24, name: "Most Athletic Guy", gender: "male" },
+  { id: 25, name: "Best Male Singer", gender: "male" },
+  // Female-only Awards (26-35)
+  { id: 26, name: "Miss NFCS", gender: "female" },
+  { id: 27, name: "Most Beautiful", gender: "female" },
+  { id: 28, name: "Best Sis", gender: "female" },
+  { id: 29, name: "Most Gentle Lady", gender: "female" },
+  { id: 30, name: "Most Fashionable Lady", gender: "female" },
+  { id: 31, name: "Coolest Lady", gender: "female" },
+  { id: 32, name: "Most Caring Sis", gender: "female" },
+  { id: 33, name: "Guys' Crush", gender: "female" },
+  { id: 34, name: "Most Athletic Lady", gender: "female" },
+  { id: 35, name: "Best Female Singer", gender: "female" },
+];
 
 // Expanded Dummy Data
 const candidates = [
@@ -11,6 +60,7 @@ const candidates = [
     firstname: "John",
     otherNames: "Chukwudi Doe",
     nickname: "Johnny Boy",
+    gender: "male" as const,
     relationshipStatus: "Single",
     dateOfBirth: "12th May",
     hobby: "Singing & Coding",
@@ -33,6 +83,7 @@ const candidates = [
     firstname: "Jane",
     otherNames: "Ngozi Smith",
     nickname: "Jay",
+    gender: "female" as const,
     relationshipStatus: "In a relationship",
     dateOfBirth: "3rd August",
     hobby: "Reading Novels",
@@ -55,6 +106,7 @@ const candidates = [
     firstname: "Michael",
     otherNames: "Oluwaseun Johnson",
     nickname: "Mickey",
+    gender: "male" as const,
     relationshipStatus: "Single",
     dateOfBirth: "25th December",
     hobby: "Playing Football",
@@ -85,6 +137,9 @@ export default function NominatePage() {
     (typeof candidates)[0] | null
   >(null);
   const [nominationCount, setNominationCount] = useState(1);
+  const [selectedAward, setSelectedAward] = useState<AwardCategory | null>(null);
+  const [awardDropdownOpen, setAwardDropdownOpen] = useState(false);
+  const [awardSearch, setAwardSearch] = useState("");
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   // Filter candidates based on search
@@ -100,6 +155,9 @@ export default function NominatePage() {
   const handleNominateClick = (candidate: (typeof candidates)[0]) => {
     setSelectedCandidate(candidate);
     setNominationCount(1);
+    setSelectedAward(null);
+    setAwardDropdownOpen(false);
+    setAwardSearch("");
     setPaymentSuccess(false);
   };
 
@@ -109,8 +167,24 @@ export default function NominatePage() {
 
   const closeNominateModal = () => {
     setSelectedCandidate(null);
+    setSelectedAward(null);
+    setAwardDropdownOpen(false);
+    setAwardSearch("");
     setPaymentSuccess(false);
   };
+
+  // Filter award categories based on candidate gender
+  const getEligibleAwards = (gender: string) => {
+    return awardCategories.filter(
+      (award) => award.gender === "all" || award.gender === gender
+    );
+  };
+
+  const filteredAwards = selectedCandidate
+    ? getEligibleAwards(selectedCandidate.gender).filter((award) =>
+        award.name.toLowerCase().includes(awardSearch.toLowerCase())
+      )
+    : [];
 
   const closePreviewModal = () => {
     setPreviewCandidate(null);
@@ -343,10 +417,15 @@ export default function NominatePage() {
                 <h3 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">
                   Payment Successful!
                 </h3>
-                <p className="text-zinc-600 dark:text-zinc-400 mb-8">
+                <p className="text-zinc-600 dark:text-zinc-400 mb-2">
                   You have successfully purchased {nominationCount}{" "}
                   nomination(s) for {selectedCandidate.firstname}.
                 </p>
+                {selectedAward && (
+                  <p className="text-sm text-blue-600 dark:text-blue-400 font-medium mb-8">
+                    Category: {selectedAward.name}
+                  </p>
+                )}
                 <button
                   onClick={closeNominateModal}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors"
@@ -375,8 +454,99 @@ export default function NominatePage() {
                   </div>
                 </div>
 
-                <div className="mb-8">
-                  <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-4">
+                {/* Award Category Selector */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-3">
+                    Award Category
+                  </label>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setAwardDropdownOpen(!awardDropdownOpen)}
+                      className={`w-full flex items-center justify-between p-3 border rounded-xl bg-zinc-50 dark:bg-zinc-800/50 text-left transition-colors ${
+                        selectedAward
+                          ? "border-blue-500 ring-1 ring-blue-500"
+                          : "border-zinc-200 dark:border-zinc-800"
+                      }`}
+                    >
+                      <span
+                        className={`text-sm ${
+                          selectedAward
+                            ? "text-zinc-900 dark:text-white font-medium"
+                            : "text-zinc-400"
+                        }`}
+                      >
+                        {selectedAward
+                          ? selectedAward.name
+                          : "Select an award category..."}
+                      </span>
+                      <ChevronDown
+                        className={`w-4 h-4 text-zinc-400 transition-transform ${
+                          awardDropdownOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+
+                    {awardDropdownOpen && (
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-2xl z-20 overflow-hidden">
+                        <div className="p-2 border-b border-zinc-100 dark:border-zinc-700">
+                          <input
+                            type="text"
+                            placeholder="Search awards..."
+                            value={awardSearch}
+                            onChange={(e) => setAwardSearch(e.target.value)}
+                            className="w-full px-3 py-2 text-sm bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-900 dark:text-white placeholder:text-zinc-400"
+                          />
+                        </div>
+                        <div className="max-h-48 overflow-y-auto">
+                          {filteredAwards.length === 0 ? (
+                            <div className="px-4 py-3 text-sm text-zinc-400">
+                              No matching awards
+                            </div>
+                          ) : (
+                            filteredAwards.map((award) => (
+                              <button
+                                key={award.id}
+                                type="button"
+                                onClick={() => {
+                                  setSelectedAward(award);
+                                  setAwardDropdownOpen(false);
+                                  setAwardSearch("");
+                                }}
+                                className={`w-full flex items-center justify-between px-4 py-2.5 text-sm hover:bg-blue-50 dark:hover:bg-zinc-700 transition-colors text-left ${
+                                  selectedAward?.id === award.id
+                                    ? "bg-blue-50 dark:bg-zinc-700 text-blue-600 dark:text-blue-400 font-medium"
+                                    : "text-zinc-700 dark:text-zinc-300"
+                                }`}
+                              >
+                                <span>{award.name}</span>
+                                <span
+                                  className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
+                                    award.gender === "male"
+                                      ? "bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400"
+                                      : award.gender === "female"
+                                        ? "bg-pink-100 dark:bg-pink-900/40 text-pink-600 dark:text-pink-400"
+                                        : "bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400"
+                                  }`}
+                                >
+                                  {award.gender === "male"
+                                    ? "♂ Male"
+                                    : award.gender === "female"
+                                      ? "♀ Female"
+                                      : "All"}
+                                </span>
+                              </button>
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Number of Nominations */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-3">
                     Number of Nominations
                   </label>
                   <div className="flex items-center justify-between p-2 border border-zinc-200 dark:border-zinc-800 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50">
@@ -400,6 +570,7 @@ export default function NominatePage() {
                   </div>
                 </div>
 
+                {/* Price Summary */}
                 <div className="flex items-center justify-between mb-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-100 dark:border-blue-900/50">
                   <span className="text-zinc-600 dark:text-zinc-300 font-medium">
                     Total Price:
@@ -411,9 +582,14 @@ export default function NominatePage() {
 
                 <button
                   onClick={handleMockPayment}
-                  className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-4 rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  disabled={!selectedAward}
+                  className={`w-full flex items-center justify-center gap-2 font-semibold py-4 px-4 rounded-xl transition-all ${
+                    selectedAward
+                      ? "bg-blue-600 hover:bg-blue-700 text-white hover:scale-[1.02] active:scale-[0.98]"
+                      : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed"
+                  }`}
                 >
-                  Proceed to Pay
+                  {selectedAward ? "Proceed to Pay" : "Select an award category first"}  
                 </button>
               </>
             )}
