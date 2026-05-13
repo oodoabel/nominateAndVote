@@ -2,7 +2,15 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { UserPlus, X, CheckCircle2, Search, Eye, ChevronDown } from "lucide-react";
+import {
+  UserPlus,
+  X,
+  CheckCircle2,
+  Search,
+  Eye,
+  ChevronDown,
+} from "lucide-react";
+import { candidates, Candidate } from "@/data/candidates";
 
 // Award Categories
 type AwardGender = "male" | "female" | "all";
@@ -54,90 +62,20 @@ const awardCategories: AwardCategory[] = [
 ];
 
 // Expanded Dummy Data
-const candidates = [
-  {
-    id: 1,
-    firstname: "John",
-    otherNames: "Chukwudi Doe",
-    nickname: "Johnny Boy",
-    gender: "male" as const,
-    relationshipStatus: "Single",
-    dateOfBirth: "12th May",
-    hobby: "Singing & Coding",
-    favBibleVerse: "Philippians 4:13",
-    forumPaddy: "Jane Smith",
-    forumCrush: "Secret 😉",
-    department: "Computer Science",
-    society: "NFCS Choir",
-    bestCampusExperience: "Winning the departmental coding hackathon in 300L.",
-    bestLevel: "400L",
-    mostStressfulLevel: "300L",
-    favQuote: "It is what it is.",
-    skill: "Web Development",
-    partingWords: "Never give up on your dreams, keep pushing.",
-    japaOrStay: "Japa ✈️",
-    image: "https://api.dicebear.com/9.x/avataaars/svg?seed=John",
-  },
-  {
-    id: 2,
-    firstname: "Jane",
-    otherNames: "Ngozi Smith",
-    nickname: "Jay",
-    gender: "female" as const,
-    relationshipStatus: "In a relationship",
-    dateOfBirth: "3rd August",
-    hobby: "Reading Novels",
-    favBibleVerse: "John 3:16",
-    forumPaddy: "John Doe",
-    forumCrush: "Michael",
-    department: "Mass Communication",
-    society: "Board of Lectors",
-    bestCampusExperience: "My first time reading as a Lector.",
-    bestLevel: "200L",
-    mostStressfulLevel: "400L",
-    favQuote: "Live and let live.",
-    skill: "Content Creation",
-    partingWords: "Make good friends, they will save you.",
-    japaOrStay: "Stay 🇳🇬",
-    image: "https://api.dicebear.com/9.x/avataaars/svg?seed=Jane",
-  },
-  {
-    id: 3,
-    firstname: "Michael",
-    otherNames: "Oluwaseun Johnson",
-    nickname: "Mickey",
-    gender: "male" as const,
-    relationshipStatus: "Single",
-    dateOfBirth: "25th December",
-    hobby: "Playing Football",
-    favBibleVerse: "Psalms 23:1",
-    forumPaddy: "David Brown",
-    forumCrush: "Sarah",
-    department: "Mechanical Engineering",
-    society: "Legion of Mary",
-    bestCampusExperience: "NFCS week sports festival.",
-    bestLevel: "100L",
-    mostStressfulLevel: "500L",
-    favQuote: "Hard work beats talent.",
-    skill: "Graphic Design",
-    partingWords: "Always put God first in everything.",
-    japaOrStay: "Japa ✈️",
-    image: "https://api.dicebear.com/9.x/avataaars/svg?seed=Michael",
-  },
-];
-
-const NOMINATION_PRICE = 500; // Naira
+const NOMINATION_PRICE = 100; // Naira
 
 export default function NominatePage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCandidate, setSelectedCandidate] = useState<
-    (typeof candidates)[0] | null
-  >(null);
-  const [previewCandidate, setPreviewCandidate] = useState<
-    (typeof candidates)[0] | null
-  >(null);
+  const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(
+    null,
+  );
+  const [previewCandidate, setPreviewCandidate] = useState<Candidate | null>(
+    null,
+  );
   const [nominationCount, setNominationCount] = useState(1);
-  const [selectedAward, setSelectedAward] = useState<AwardCategory | null>(null);
+  const [selectedAward, setSelectedAward] = useState<AwardCategory | null>(
+    null,
+  );
   const [awardDropdownOpen, setAwardDropdownOpen] = useState(false);
   const [awardSearch, setAwardSearch] = useState("");
   const [paymentSuccess, setPaymentSuccess] = useState(false);
@@ -176,13 +114,13 @@ export default function NominatePage() {
   // Filter award categories based on candidate gender
   const getEligibleAwards = (gender: string) => {
     return awardCategories.filter(
-      (award) => award.gender === "all" || award.gender === gender
+      (award) => award.gender === "all" || award.gender === gender,
     );
   };
 
   const filteredAwards = selectedCandidate
     ? getEligibleAwards(selectedCandidate.gender).filter((award) =>
-        award.name.toLowerCase().includes(awardSearch.toLowerCase())
+        award.name.toLowerCase().includes(awardSearch.toLowerCase()),
       )
     : [];
 
@@ -236,7 +174,7 @@ export default function NominatePage() {
               {/* Image Area - Clickable for Preview */}
               <button
                 onClick={() => handlePreviewClick(candidate)}
-                className="relative w-full aspect-square bg-zinc-100 dark:bg-zinc-800/50 p-4 sm:p-6 flex items-center justify-center cursor-pointer group/img overflow-hidden"
+                className="relative w-full aspect-square bg-zinc-100 dark:bg-zinc-800/50  flex items-center justify-center cursor-pointer group/img overflow-hidden"
               >
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center z-10">
                   <span className="bg-white/90 text-zinc-900 text-xs font-bold py-1 px-3 rounded-full flex items-center gap-1 shadow-lg">
@@ -246,9 +184,10 @@ export default function NominatePage() {
                 <Image
                   src={candidate.image}
                   alt={candidate.firstname}
-                  width={150}
-                  height={150}
-                  className="w-full h-full object-contain group-hover/img:scale-110 transition-transform duration-500"
+                  width={500}
+                  height={500}
+                  unoptimized
+                  className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-500"
                 />
               </button>
 
@@ -260,6 +199,9 @@ export default function NominatePage() {
                   <span className="inline-flex items-center rounded-md bg-purple-50 dark:bg-purple-900/30 px-2 py-1 text-[10px] sm:text-xs font-medium text-purple-700 dark:text-purple-400 ring-1 ring-inset ring-purple-700/10 truncate">
                     {candidate.society}
                   </span>
+                  <span className="inline-flex items-center rounded-md bg-purple-50 dark:bg-purple-900/30 px-2 py-1 text-[10px] sm:text-xs font-medium text-purple-700 dark:text-purple-400 ring-1 ring-inset ring-purple-700/10 truncate">
+                    {candidate.department}
+                  </span>
                 </div>
 
                 <div className="mt-auto flex flex-col sm:flex-row gap-2">
@@ -267,8 +209,8 @@ export default function NominatePage() {
                     onClick={() => handlePreviewClick(candidate)}
                     className="flex-1 flex items-center justify-center gap-1 sm:gap-2 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white font-semibold py-2 sm:py-3 px-2 sm:px-4 rounded-xl transition-colors text-xs sm:text-sm"
                   >
-                    <Eye className="w-4 h-4 sm:w-4 sm:h-4" />
-                    <span className="hidden sm:inline">Profile</span>
+                    <Eye className=" w-4 h-4 sm:w-4 sm:h-4" />
+                    <span className="sm:inline">Profile</span>
                   </button>
                   <button
                     onClick={() => handleNominateClick(candidate)}
@@ -298,13 +240,14 @@ export default function NominatePage() {
             <div className="overflow-y-auto p-0">
               {/* Header / Big Image */}
               <div className="bg-gradient-to-b from-blue-100 to-white dark:from-blue-900/30 dark:to-zinc-900 pt-12 pb-6 px-6 sm:px-10 flex flex-col items-center text-center">
-                <div className="w-32 h-32 sm:w-48 sm:h-48 bg-white dark:bg-zinc-800 rounded-full shadow-xl p-2 mb-4">
+                <div className="w-50 h-50 sm:w-48 sm:h-48 bg-white dark:bg-zinc-800 rounded-full shadow-xl p-2 mb-4">
                   <Image
                     src={previewCandidate.image}
                     alt={previewCandidate.firstname}
-                    width={200}
-                    height={200}
-                    className="w-full h-full object-contain rounded-full"
+                    width={800}
+                    height={800}
+                    unoptimized
+                    className="w-full h-full object-cover rounded-full"
                   />
                 </div>
                 <h2 className="text-3xl sm:text-4xl font-black text-zinc-900 dark:text-white">
@@ -441,6 +384,7 @@ export default function NominatePage() {
                     alt={selectedCandidate.firstname}
                     width={64}
                     height={64}
+                    unoptimized
                     className="rounded-full bg-zinc-100 dark:bg-zinc-800"
                   />
                   <div>
@@ -589,7 +533,9 @@ export default function NominatePage() {
                       : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed"
                   }`}
                 >
-                  {selectedAward ? "Proceed to Pay" : "Select an award category first"}  
+                  {selectedAward
+                    ? "Proceed to Pay"
+                    : "Select an award category first"}
                 </button>
               </>
             )}

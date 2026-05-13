@@ -8,7 +8,7 @@ export default function Home() {
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/20 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-purple-500/20 blur-[120px] pointer-events-none" />
 
-      <main className="w-full max-w-5xl px-6 py-24 flex flex-col items-center justify-center text-center relative z-10">
+      <main className="w-full max-w-5xl px-6 py-15 flex flex-col items-center justify-center text-center relative z-10">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-medium mb-8 border border-blue-100 dark:border-blue-800/50">
           <Trophy className="w-4 h-4" />
           <span>NFCS Annual Awards</span>
@@ -42,7 +42,7 @@ export default function Home() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24 w-full text-left">
+        <div className="flex flex-col items-center gap-8 mt-24 w-full text-left">
           <div className="flex flex-col items-center md:items-start p-6 rounded-2xl bg-white/50 dark:bg-zinc-900/50 border border-zinc-100 dark:border-zinc-800 backdrop-blur-sm">
             {/* <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/50 flex items-center justify-center mb-4 text-green-600 dark:text-green-400">
               <Trophy className="w-6 h-6" />

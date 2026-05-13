@@ -8,54 +8,16 @@ import {
   AlertCircle,
   Vote as VoteIcon,
 } from "lucide-react";
+import { candidates, Candidate } from "@/data/candidates";
 
-// Dummy Data
-const candidates = [
-  {
-    id: 1,
-    name: "John Doe",
-    society: "NFCS Choir",
-    image: "https://api.dicebear.com/9.x/avataaars/svg?seed=John",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    society: "Board of Lectors",
-    image: "https://api.dicebear.com/9.x/avataaars/svg?seed=Jane",
-  },
-  {
-    id: 3,
-    name: "Michael Johnson",
-    society: "Legion of Mary",
-    image: "https://api.dicebear.com/9.x/avataaars/svg?seed=Michael",
-  },
-  {
-    id: 4,
-    name: "Sarah Williams",
-    society: "Charismatic Renewal",
-    image: "https://api.dicebear.com/9.x/avataaars/svg?seed=Sarah",
-  },
-  {
-    id: 5,
-    name: "David Brown",
-    society: "St. Vincent de Paul",
-    image: "https://api.dicebear.com/9.x/avataaars/svg?seed=David",
-  },
-  {
-    id: 6,
-    name: "Emily Davis",
-    society: "CYON",
-    image: "https://api.dicebear.com/9.x/avataaars/svg?seed=Emily",
-  },
-];
 
 export default function VotePage() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
-  const [selectedCandidate, setSelectedCandidate] = useState<
-    (typeof candidates)[0] | null
-  >(null);
+  const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(
+    null
+  );
 
   const handleVerifyEmail = (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,7 +32,7 @@ export default function VotePage() {
     }, 800);
   };
 
-  const handleVote = (candidate: (typeof candidates)[0]) => {
+  const handleVote = (candidate: Candidate) => {
     setSelectedCandidate(candidate);
     // Mock voting delay
     setTimeout(() => {
@@ -149,15 +111,16 @@ export default function VotePage() {
                 <div className="relative w-full aspect-square bg-zinc-100 dark:bg-zinc-800/50 p-8 flex items-center justify-center">
                   <Image
                     src={candidate.image}
-                    alt={candidate.name}
+                    alt={candidate.firstname}
                     width={200}
                     height={200}
+                    unoptimized
                     className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
                   />
                 </div>
                 <div className="p-6 flex flex-col flex-1">
                   <h3 className="text-2xl font-bold text-zinc-900 dark:text-white mb-1">
-                    {candidate.name}
+                    {candidate.firstname} {candidate.otherNames.split(" ")[0]}
                   </h3>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
                     {candidate.society}
@@ -186,7 +149,7 @@ export default function VotePage() {
           <p className="text-zinc-600 dark:text-zinc-400 mb-8">
             Thank you, your vote for{" "}
             <span className="font-bold text-zinc-900 dark:text-white">
-              {selectedCandidate.name}
+              {selectedCandidate.firstname} {selectedCandidate.otherNames}
             </span>{" "}
             has been securely recorded.
           </p>
