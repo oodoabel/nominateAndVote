@@ -18,3 +18,26 @@ model NominationPayment {
   status          String   @default("success")
   createdAt       DateTime @default(now())
 }
+
+model CandidateVote {
+  id            String   @id @default(cuid())
+  candidateId   Int
+  candidateName String
+  awardCategory String
+  voteCount     Int      @default(1)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([candidateId, awardCategory])
+}
+
+model VoterRecord {
+  id            String   @id @default(cuid())
+  voterEmail    String
+  awardCategory String
+  candidateId   Int
+  candidateName String
+  createdAt     DateTime @default(now())
+
+  @@unique([voterEmail, awardCategory])
+}
