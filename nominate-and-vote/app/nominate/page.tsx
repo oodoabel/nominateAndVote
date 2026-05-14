@@ -2,7 +2,7 @@
 import dynamic from "next/dynamic";
 const PaystackButton = dynamic(
   () => import("react-paystack").then((mod) => mod.PaystackButton),
-  { ssr: false }
+  { ssr: false },
 );
 
 import { useState } from "react";
@@ -32,44 +32,36 @@ interface AwardCategory {
 }
 
 const awardCategories: AwardCategory[] = [
-  // Unisex Awards (1-15)
-  { id: 1, name: "Most Popular", gender: "all" },
-  { id: 2, name: "Most Spiritual", gender: "all" },
-  { id: 3, name: "Best Dressed", gender: "all" },
-  { id: 4, name: "Most Friendly", gender: "all" },
-  { id: 5, name: "Most Likely to Succeed", gender: "all" },
-  { id: 6, name: "Life of the Party", gender: "all" },
-  { id: 7, name: "Most Talented", gender: "all" },
-  { id: 8, name: "Best Smile", gender: "all" },
-  { id: 9, name: "Most Hardworking", gender: "all" },
-  { id: 10, name: "Most Generous", gender: "all" },
-  { id: 11, name: "Best Leader", gender: "all" },
-  { id: 12, name: "Most Creative", gender: "all" },
-  { id: 13, name: "Best Couple (Him)", gender: "male" },
-  { id: 14, name: "Best Couple (Her)", gender: "female" },
-  { id: 15, name: "Most Prayerful", gender: "all" },
-  // Male-only Awards (16-25)
-  { id: 16, name: "Mr. NFCS", gender: "male" },
-  { id: 17, name: "Most Handsome", gender: "male" },
-  { id: 18, name: "Best Bro", gender: "male" },
-  { id: 19, name: "Most Gentle Guy", gender: "male" },
-  { id: 20, name: "Most Fashionable Guy", gender: "male" },
-  { id: 21, name: "Coolest Guy", gender: "male" },
-  { id: 22, name: "Most Caring Bro", gender: "male" },
-  { id: 23, name: "Ladies' Man", gender: "male" },
-  { id: 24, name: "Most Athletic Guy", gender: "male" },
-  { id: 25, name: "Best Male Singer", gender: "male" },
-  // Female-only Awards (26-35)
-  { id: 26, name: "Miss NFCS", gender: "female" },
-  { id: 27, name: "Most Beautiful", gender: "female" },
-  { id: 28, name: "Best Sis", gender: "female" },
-  { id: 29, name: "Most Gentle Lady", gender: "female" },
-  { id: 30, name: "Most Fashionable Lady", gender: "female" },
-  { id: 31, name: "Coolest Lady", gender: "female" },
-  { id: 32, name: "Most Caring Sis", gender: "female" },
-  { id: 33, name: "Guys' Crush", gender: "female" },
-  { id: 34, name: "Most Athletic Lady", gender: "female" },
-  { id: 35, name: "Best Female Singer", gender: "female" },
+  // Unisex / General Awards
+  { id: 1, name: "Most Handsome", gender: "male" },
+  { id: 2, name: "Most Beautiful", gender: "female" },
+  { id: 3, name: "Most Intellectual (Gk)", gender: "all" },
+  { id: 4, name: "Most intellectual (Bosso)", gender: "all" },
+  { id: 5, name: "Most Social male", gender: "male" },
+  { id: 6, name: "Most social female", gender: "female" },
+  { id: 7, name: "Entrepreneur of the Year male", gender: "male" },
+  { id: 8, name: "Entrepreneur of the year Female", gender: "female" },
+  { id: 9, name: "Best Dressed (Male)", gender: "male" },
+  { id: 10, name: "Best Dressed (Female)", gender: "female" },
+  { id: 11, name: "Most Dedicated (GK)", gender: "all" },
+  { id: 12, name: "Most dedicated (bosso)", gender: "all" },
+  { id: 13, name: "Outstanding Personality (Gk)", gender: "all" },
+  { id: 14, name: "Outstanding personality (bosso)", gender: "all" },
+  { id: 15, name: "Cool Calm and Collected (Gk)", gender: "all" },
+  { id: 16, name: "Cool calm and collected (bosso)", gender: "all" },
+  { id: 17, name: "Most Influential", gender: "all" },
+  { id: 18, name: "Best clique (Gk)", gender: "all" },
+  { id: 19, name: "Best clique (bosso)", gender: "all" },
+  { id: 20, name: "Most political", gender: "all" },
+  { id: 21, name: "Couple of the year", gender: "all" },
+  { id: 22, name: "Mr ebony", gender: "male" },
+  { id: 23, name: "Miss ebony", gender: "female" },
+  { id: 24, name: "Sportsman of the year", gender: "male" },
+  { id: 25, name: "Sportswoman of the year", gender: "female" },
+  { id: 26, name: "Icon of Excellers family", gender: "all" },
+  { id: 27, name: "Mr Culture", gender: "male" },
+  { id: 28, name: "Miss Culture", gender: "female" },
+  { id: 29, name: "Most expensive", gender: "all" },
 ];
 
 // Expanded Dummy Data
