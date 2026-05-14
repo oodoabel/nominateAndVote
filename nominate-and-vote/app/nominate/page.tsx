@@ -1,4 +1,9 @@
 "use client";
+import dynamic from "next/dynamic";
+const PaystackButton = dynamic(
+  () => import("react-paystack").then((mod) => mod.PaystackButton),
+  { ssr: false }
+);
 
 import { useState } from "react";
 import Image from "next/image";
@@ -11,6 +16,12 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { candidates, Candidate } from "@/data/candidates";
+
+const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
+// const amount =
+// const [email, setEmail] = useState("")
+// const [name, setName] = useState("")
+// const [phone, setPhone] = useState("")
 
 // Award Categories
 type AwardGender = "male" | "female" | "all";
@@ -79,6 +90,10 @@ export default function NominatePage() {
   const [awardDropdownOpen, setAwardDropdownOpen] = useState(false);
   const [awardSearch, setAwardSearch] = useState("");
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+
+  const totalAmount = nominationCount * NOMINATION_PRICE;
 
   // Filter candidates based on search
   const filteredCandidates = candidates.filter((candidate) => {
@@ -97,6 +112,8 @@ export default function NominatePage() {
     setAwardDropdownOpen(false);
     setAwardSearch("");
     setPaymentSuccess(false);
+    setEmail("");
+    setName("");
   };
 
   const handlePreviewClick = (candidate: (typeof candidates)[0]) => {
@@ -109,6 +126,62 @@ export default function NominatePage() {
     setAwardDropdownOpen(false);
     setAwardSearch("");
     setPaymentSuccess(false);
+    setEmail("");
+    setName("");
+  };
+
+  const paystackProps = {
+    email,
+    amount: totalAmount * 100, // Paystack amount is in kobo
+    metadata: {
+      name,
+      custom_fields: [
+        {
+          display_name: "Candidate Name",
+          variable_name: "candidate_name",
+          value: selectedCandidate
+            ? `${selectedCandidate.firstname} ${selectedCandidate.otherNames}`
+            : "",
+        },
+        {
+          display_name: "Award Category",
+          variable_name: "award_category",
+          value: selectedAward ? selectedAward.name : "",
+        },
+        {
+          display_name: "Nomination Count",
+          variable_name: "nomination_count",
+          value: nominationCount.toString(),
+        },
+      ],
+    },
+    publicKey: publicKey || "",
+    text: "Proceed to Pay",
+    onSuccess: async (reference: any) => {
+      try {
+        await fetch("/api/nominations", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            voterName: name,
+            voterEmail: email,
+            candidateName: selectedCandidate
+              ? `${selectedCandidate.firstname} ${selectedCandidate.otherNames}`
+              : "",
+            awardCategory: selectedAward ? selectedAward.name : "",
+            nominationCount,
+            amountPaid: totalAmount,
+            reference: reference.reference || reference.trxref || "unknown",
+          }),
+        });
+      } catch (error) {
+        console.error("Failed to save payment data:", error);
+      }
+      setPaymentSuccess(true);
+    },
+    onClose: () => alert("Payment cancelled. You can try again."),
   };
 
   // Filter award categories based on candidate gender
@@ -128,7 +201,7 @@ export default function NominatePage() {
     setPreviewCandidate(null);
   };
 
-  const handleMockPayment = () => {
+  const handlePayment = () => {
     setTimeout(() => {
       setPaymentSuccess(true);
     }, 1000);
@@ -514,29 +587,59 @@ export default function NominatePage() {
                   </div>
                 </div>
 
+                {/* Voter Details */}
+                <div className="mb-6 space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                      Your Name
+                    </label>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Enter your name"
+                      className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-zinc-900 dark:text-white placeholder:text-zinc-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Enter your email"
+                      className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-zinc-900 dark:text-white placeholder:text-zinc-400"
+                    />
+                  </div>
+                </div>
+
                 {/* Price Summary */}
                 <div className="flex items-center justify-between mb-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-100 dark:border-blue-900/50">
                   <span className="text-zinc-600 dark:text-zinc-300 font-medium">
                     Total Price:
                   </span>
                   <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                    ₦{(nominationCount * NOMINATION_PRICE).toLocaleString()}
+                    ₦{totalAmount}
                   </span>
                 </div>
 
-                <button
-                  onClick={handleMockPayment}
-                  disabled={!selectedAward}
+                <PaystackButton
+                  {...paystackProps}
+                  disabled={!selectedAward || !email || !name}
                   className={`w-full flex items-center justify-center gap-2 font-semibold py-4 px-4 rounded-xl transition-all ${
-                    selectedAward
+                    selectedAward && email && name
                       ? "bg-blue-600 hover:bg-blue-700 text-white hover:scale-[1.02] active:scale-[0.98]"
                       : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed"
                   }`}
                 >
-                  {selectedAward
-                    ? "Proceed to Pay"
-                    : "Select an award category first"}
-                </button>
+                  {!(email && name)
+                    ? "Enter name and email"
+                    : !selectedAward
+                      ? "Select an award category"
+                      : "Proceed to Pay"}
+                </PaystackButton>
               </>
             )}
           </div>

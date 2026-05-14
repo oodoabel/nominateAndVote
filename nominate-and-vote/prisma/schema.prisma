@@ -1,0 +1,20 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model NominationPayment {
+  id              String   @id @default(cuid())
+  voterName       String
+  voterEmail      String
+  candidateName   String
+  awardCategory   String
+  nominationCount Int
+  amountPaid      Float
+  reference       String   @unique
+  status          String   @default("success")
+  createdAt       DateTime @default(now())
+}

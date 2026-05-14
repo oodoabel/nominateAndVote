@@ -9,6 +9,10 @@ export default function Home() {
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-purple-500/20 blur-[120px] pointer-events-none" />
 
       <main className="w-full max-w-5xl px-6 py-15 flex flex-col items-center justify-center text-center relative z-10">
+        <div className="flex items-center gap-2 px-3 py-3">
+          <img className="w-10 h-10" src="nfcs_logo.png" alt="" />
+          <img className="w-10 h-10" src="futm_logo.png" alt="" />
+        </div>
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-medium mb-8 border border-blue-100 dark:border-blue-800/50">
           <Trophy className="w-4 h-4" />
           <span>NFCS Annual Awards</span>
