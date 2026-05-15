@@ -62,6 +62,7 @@ const awardCategories: AwardCategory[] = [
   { id: 27, name: "Mr Culture", gender: "male" },
   { id: 28, name: "Miss Culture", gender: "female" },
   { id: 29, name: "Most expensive", gender: "all" },
+  { id: 30, name: "Most talented", gender: "all" },
 ];
 
 // Expanded Dummy Data

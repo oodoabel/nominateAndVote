@@ -44,12 +44,12 @@ export default function Navbar({ appState }: { appState: AppState }) {
               >
                 Nominate
               </Link>
-              <Link
+              {/* <Link
                 href="/nominate/results"
                 className="text-sm font-medium text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors"
               >
                 Nominate Results
-              </Link>
+              </Link> */}
             </>
           )}
           {isVoting && (
@@ -60,12 +60,12 @@ export default function Navbar({ appState }: { appState: AppState }) {
               >
                 Vote
               </Link>
-              <Link
+              {/* <Link
                 href="/vote/results"
                 className="text-sm font-medium text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors"
               >
                 Vote Results
-              </Link>
+              </Link> */}
             </>
           )}
         </div>
