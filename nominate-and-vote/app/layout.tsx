@@ -18,11 +18,15 @@ export const metadata: Metadata = {
   description: "Nominate and vote for your favorite NFCS candidates",
 };
 
-export default function RootLayout({
+import { getAppState } from "@/lib/appConfig";
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const appState = await getAppState();
+
   return (
     <html
       lang="en"
@@ -30,7 +34,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-zinc-50 dark:bg-black">
-        <Navbar />
+        <Navbar appState={appState} />
         <main className="flex-1 flex flex-col">{children}</main>
       </body>
     </html>

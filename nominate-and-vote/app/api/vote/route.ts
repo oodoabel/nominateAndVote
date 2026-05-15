@@ -1,9 +1,20 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { eligibleEmails } from "@/data/eligibleEmails";
+import { getAppState } from "@/lib/appConfig";
+import { AppState } from "@prisma/client";
 
 export async function POST(request: Request) {
   try {
+    const appState = await getAppState();
+
+    if (appState !== AppState.VOTING) {
+      return NextResponse.json(
+        { error: "Voting is currently closed." },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
     const { votes, voterEmail } = body as {
       voterEmail: string;

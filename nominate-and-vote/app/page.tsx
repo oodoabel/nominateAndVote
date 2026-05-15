@@ -1,7 +1,14 @@
 import Link from "next/link";
-import { ArrowRight, Trophy, Users, Star } from "lucide-react";
+import { ArrowRight, Trophy, Users, Star, Lock } from "lucide-react";
+import { getAppState } from "@/lib/appConfig";
+import { AppState } from "@prisma/client";
 
-export default function Home() {
+export default async function Home() {
+  const appState = await getAppState();
+  const isNomination = appState === AppState.NOMINATION;
+  const isVoting = appState === AppState.VOTING;
+  const isInactive = appState === AppState.INACTIVE;
+
   return (
     <div className="flex flex-col items-center justify-center flex-1 w-full relative overflow-hidden">
       {/* Background Gradients */}
@@ -26,45 +33,56 @@ export default function Home() {
         </h1>
 
         <p className="text-lg md:text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl mb-12">
-          Support your favorite final-year students. Boost their chances with
-          paid nominations, and cast your official vote when the polls open.
+          {isInactive
+            ? "The nomination and voting periods for this year's awards are currently closed. Stay tuned for updates!"
+            : "Support your favorite final-year students. Boost their chances with paid nominations, and cast your official vote when the polls open."}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-          <Link
-            href="/nominate"
-            className="group flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-full transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_-10px_rgba(37,99,235,0.5)]"
-          >
-            <span>Nominate Now</span>
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <Link
-            href="/vote"
-            className="flex items-center justify-center gap-2 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-900 dark:text-white font-semibold py-4 px-8 rounded-full border border-zinc-200 dark:border-zinc-800 transition-all hover:scale-105 active:scale-95"
-          >
-            <span>Cast Your Vote</span>
-          </Link>
+          {isNomination && (
+            <Link
+              href="/nominate"
+              className="group flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-full transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_-10px_rgba(37,99,235,0.5)]"
+            >
+              <span>Nominate Now</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          )}
+          {isVoting && (
+            <Link
+              href="/vote"
+              className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-full transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_-10px_rgba(37,99,235,0.5)]"
+            >
+              <ArrowRight className="w-5 h-5" />
+              <span>Cast Your Vote</span>
+            </Link>
+          )}
+          {isInactive && (
+            <div className="flex items-center justify-center gap-2 bg-zinc-100 dark:bg-zinc-800 text-zinc-500 font-semibold py-4 px-8 rounded-full border border-zinc-200 dark:border-zinc-700 cursor-not-allowed">
+              <Lock className="w-5 h-5" />
+              <span>Portal Closed</span>
+            </div>
+          )}
         </div>
 
-        <div className="flex flex-col items-center gap-8 mt-24 w-full text-left">
-          <div className="flex flex-col items-center md:items-start p-6 rounded-2xl bg-white/50 dark:bg-zinc-900/50 border border-zinc-100 dark:border-zinc-800 backdrop-blur-sm">
-            {/* <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/50 flex items-center justify-center mb-4 text-green-600 dark:text-green-400">
-              <Trophy className="w-6 h-6" />
-            </div> */}
-            <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">
-              Secure Voting
-            </h3>
-            <p className="text-zinc-600 dark:text-zinc-400 text-center md:text-left">
-              Only registered members can cast the final, decisive vote.{" "}
-              <a
-                className="text-blue-400"
-                href="https://docs.google.com/forms/d/e/1FAIpQLSczBrfotpQqq4tYLMnS7BjZwC9QNs54dhgeE9gF9s6_ZsI-qA/viewform?usp=header"
-              >
-                Click here to register
-              </a>
-            </p>
+        {isNomination && (
+          <div className="flex flex-col items-center gap-8 mt-24 w-full text-left">
+            <div className="flex flex-col items-center md:items-start p-6 rounded-2xl bg-white/50 dark:bg-zinc-900/50 border border-zinc-100 dark:border-zinc-800 backdrop-blur-sm">
+              <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">
+                Secure Voting
+              </h3>
+              <p className="text-zinc-600 dark:text-zinc-400 text-center md:text-left">
+                Only registered members can cast the final, decisive vote.{" "}
+                <a
+                  className="text-blue-400"
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSczBrfotpQqq4tYLMnS7BjZwC9QNs54dhgeE9gF9s6_ZsI-qA/viewform?usp=header"
+                >
+                  Click here to register
+                </a>
+              </p>
+            </div>
           </div>
-        </div>
+        )}
       </main>
     </div>
   );

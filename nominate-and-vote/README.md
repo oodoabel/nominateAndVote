@@ -1,3 +1,15 @@
+# To set to NOMINATION
+
+npx prisma db execute --file scratch/setNomination.sql
+
+# To set to VOTING
+
+npx prisma db execute --file scratch/setVoting.sql
+
+# To set to INACTIVE
+
+npx prisma db execute --file scratch/setInactive.sql
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

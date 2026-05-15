@@ -1,0 +1,1 @@
+INSERT INTO "SystemConfig" (id, state) VALUES (1, 'NOMINATION') ON CONFLICT (id) DO UPDATE SET state = 'NOMINATION';

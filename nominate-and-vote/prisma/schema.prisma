@@ -41,3 +41,14 @@ model VoterRecord {
 
   @@unique([voterEmail, awardCategory])
 }
+
+enum AppState {
+  INACTIVE
+  NOMINATION
+  VOTING
+}
+
+model SystemConfig {
+  id    Int      @id @default(1)
+  state AppState @default(INACTIVE)
+}
