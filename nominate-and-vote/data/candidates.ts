@@ -161,7 +161,6 @@ function inferGender(firstname: string, otherNames: string): "male" | "female" {
   return "male";
 }
 
-
 export const candidates: Candidate[] = excellersData.map((data, index) => ({
   id: index + 1,
   firstname: data.firstname,

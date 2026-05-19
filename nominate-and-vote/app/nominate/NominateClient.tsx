@@ -18,10 +18,6 @@ import {
 import { candidates, Candidate } from "@/data/candidates";
 
 const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
-// const amount =
-// const [email, setEmail] = useState("")
-// const [name, setName] = useState("")
-// const [phone, setPhone] = useState("")
 
 // Award Categories
 type AwardGender = "male" | "female" | "all";
@@ -58,11 +54,11 @@ const awardCategories: AwardCategory[] = [
   { id: 23, name: "Miss ebony", gender: "female" },
   { id: 24, name: "Sportsman of the year", gender: "male" },
   { id: 25, name: "Sportswoman of the year", gender: "female" },
-  { id: 26, name: "Icon of Excellers family", gender: "all" },
   { id: 27, name: "Mr Culture", gender: "male" },
   { id: 28, name: "Miss Culture", gender: "female" },
   { id: 29, name: "Most expensive", gender: "all" },
   { id: 30, name: "Most talented", gender: "all" },
+  { id: 31, name: "Music personality of the year", gender: "all" },
 ];
 
 // Expanded Dummy Data

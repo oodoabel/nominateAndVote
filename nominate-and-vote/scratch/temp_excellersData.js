@@ -1,5 +1,5 @@
 // excellersData.ts
-export const excellersData = [
+module.exports = [
   {
     timestamp: "2026-03-03 22:11:47.989000",
     firstname: "Itodo",
@@ -72,6 +72,29 @@ export const excellersData = [
       "https://drive.google.com/open?id=1iGGssf_SdcOzk1nbGYwvXubWFC_g5yEX",
   },
   {
+    timestamp: "2026-03-03 22:29:26.045000",
+    firstname: "KINGSLEY",
+    otherNames: "ECHETARIGBO AGBO",
+    nickname: "KELLYMOORE",
+    relationshipStatus: "Single",
+    dateOfBirth: "2/17",
+    hobby: "ADVENTURE",
+    favBibleVerse: "Proverbs 21:9",
+    forumPaddy: "WHOLE EXCELLERS",
+    forumCrush: "NIL",
+    department: "BIOCHEMISTRY",
+    nfcsSocieties: "BRIGADE",
+    bestCampusExperience: "Not really a people's person, so nil",
+    bestLevel: "200l",
+    mostStressfulLevel: "300l",
+    favQuote: "Just know say water later cook fish",
+    skillOrSideHustle: "POSITION HUNTER",
+    partingWords: "CREATE YOUR OWN STYLE.",
+    japaOrStay: "JAPA",
+    photoUrl:
+      "https://drive.google.com/open?id=1a8fJ9WwbBp9FBC6k--NP9-NcbZDfAAXA",
+  },
+  {
     timestamp: "2026-03-03 22:33:00.349000",
     firstname: "Priscilla",
     otherNames: "John",
@@ -120,6 +143,29 @@ export const excellersData = [
     japaOrStay: "Stay",
     photoUrl:
       "https://drive.google.com/open?id=154d3YpxDtpE8QJgmCmmyT-W0JFK18tNB",
+  },
+  {
+    timestamp: "2026-03-03 22:36:26.314000",
+    firstname: "EJEH",
+    otherNames: "JOSEPH ADAH",
+    nickname: "JAE STYLES",
+    relationshipStatus: "Single",
+    dateOfBirth: "9/14",
+    hobby: "Eating And Looking Good",
+    favBibleVerse: "Roman 8 vs 18",
+    forumPaddy: "All Excellers",
+    forumCrush: "None",
+    department: "ARCHITECTURE",
+    nfcsSocieties: "LEGION AND MASS SERVER",
+    bestCampusExperience: "Winning the NFCS Week Competition",
+    bestLevel: "400l",
+    mostStressfulLevel: "500l",
+    favQuote: "Own Your Value",
+    skillOrSideHustle: "SHOE COBBLER",
+    partingWords: "KEEP STRIVING",
+    japaOrStay: "STAY",
+    photoUrl:
+      "https://drive.google.com/open?id=1tF5kR55YoodiTtxMNpwVWUV5tECzVlGg",
   },
   {
     timestamp: "2026-03-03 22:38:06.485000",
@@ -340,6 +386,30 @@ export const excellersData = [
     japaOrStay: "Stay",
     photoUrl:
       "https://drive.google.com/open?id=10OvBYxuFYEx2D4UmwYvqUWXwXPeL2xa9",
+  },
+  {
+    timestamp: "2026-03-04 09:26:46.574000",
+    firstname: "Msugh",
+    otherNames: "Gabriel",
+    nickname: "SirGab",
+    relationshipStatus: "Single",
+    dateOfBirth: "4/12",
+    hobby: "Music freaky, making friends",
+    favBibleVerse:
+      "1 Thessalonians 5:18 Give thanks in all circumstances, for this is will of God in Christ Jesus for you.",
+    forumPaddy: "Nil",
+    forumCrush: "Nil",
+    department: "Quantity Surveying",
+    nfcsSocieties: "Choir",
+    bestCampusExperience: "Interacting with friends",
+    bestLevel: "500l",
+    mostStressfulLevel: "300l",
+    favQuote: "As long as we have God, we have hope",
+    skillOrSideHustle: "Graphics designing",
+    partingWords: "Great expectations herald great disappointment",
+    japaOrStay: "Japa",
+    photoUrl:
+      "https://drive.google.com/open?id=1j6xth8bIhh1CEnkbr0Dcm6sl4cPlDoTe",
   },
   {
     timestamp: "2026-03-04 19:32:43.962000",
