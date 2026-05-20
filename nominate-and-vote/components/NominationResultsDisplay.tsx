@@ -4,17 +4,15 @@ import React, { useState, useMemo } from "react";
 import { 
   Award, 
   TrendingUp, 
-  User, 
-  BarChart3, 
   Trophy, 
   Users, 
   CheckCircle2, 
   Lock, 
   Unlock, 
-  AlertCircle, 
   Info, 
   Search,
-  Sparkles
+  Sparkles,
+  BarChart3
 } from "lucide-react";
 
 export type ResultItem = {
@@ -43,10 +41,15 @@ export default function NominationResultsDisplay({ title, description, data }: N
     let uniqueContestants = new Set<string>();
     let totalCandidatesCount = 0;
     let candidatesQualified = 0;
+    const unnominatedList: string[] = [];
 
     data.forEach((cat) => {
       const contestantsCount = cat.results.length;
       const benchmark = contestantsCount === 1 ? 160 : 100;
+
+      if (contestantsCount === 0) {
+        unnominatedList.push(cat.category);
+      }
 
       cat.results.forEach((r) => {
         totalNominations += r.count;
@@ -63,15 +66,20 @@ export default function NominationResultsDisplay({ title, description, data }: N
       activeContestants: uniqueContestants.size,
       totalCandidatesCount,
       candidatesQualified,
-      qualifiedPercentage: totalCandidatesCount > 0 ? (candidatesQualified / totalCandidatesCount) * 100 : 0
+      qualifiedPercentage: totalCandidatesCount > 0 ? (candidatesQualified / totalCandidatesCount) * 100 : 0,
+      unnominatedCount: unnominatedList.length,
+      unnominatedList,
     };
   }, [data]);
 
-  // 2. Filter categories based on search input
+  // 2. Filter categories: hide empty ones entirely, and apply search filtering
   const filteredData = useMemo(() => {
-    return data.filter((cat) => 
-      cat.category.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    return data.filter((cat) => {
+      // Hide categories that have no nominees yet
+      if (cat.results.length === 0) return false;
+
+      return cat.category.toLowerCase().includes(searchTerm.toLowerCase());
+    });
   }, [data, searchTerm]);
 
   return (
@@ -94,77 +102,22 @@ export default function NominationResultsDisplay({ title, description, data }: N
           </p>
         </div>
 
-        {/* ─── Nomination Overview Dashboard ─── */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {/* Card 1: Total Nominations */}
-          <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="absolute right-4 top-4 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 p-3 rounded-2xl">
-              <TrendingUp className="h-6 w-6" />
-            </div>
-            <p className="text-sm font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
-              Total Weight Cast
-            </p>
-            <h3 className="text-4xl font-extrabold text-zinc-900 dark:text-white mt-2">
-              {stats.totalNominations.toLocaleString()}
-            </h3>
-            <p className="text-xs text-zinc-500 mt-2">
-              Cumulative nomination votes from verified payments.
-            </p>
-          </div>
-
-          {/* Card 2: Candidates Qualified */}
-          <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="absolute right-4 top-4 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 p-3 rounded-2xl">
-              <Sparkles className="h-6 w-6" />
-            </div>
-            <p className="text-sm font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
-              Candidates Qualified
-            </p>
-            <h3 className="text-4xl font-extrabold text-zinc-900 dark:text-white mt-2">
-              {stats.candidatesQualified} <span className="text-lg font-medium text-zinc-400">/ {stats.totalCandidatesCount}</span>
-            </h3>
-            {/* mini progress indicator */}
-            <div className="w-full h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full mt-4 overflow-hidden">
-              <div 
-                className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-1000" 
-                style={{ width: `${stats.qualifiedPercentage}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Card 3: Active Contestants */}
-          <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="absolute right-4 top-4 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 p-3 rounded-2xl">
-              <Users className="h-6 w-6" />
-            </div>
-            <p className="text-sm font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
-              Active Contestants
-            </p>
-            <h3 className="text-4xl font-extrabold text-zinc-900 dark:text-white mt-2">
-              {stats.activeContestants}
-            </h3>
-            <p className="text-xs text-zinc-500 mt-2">
-              Unique final-year students nominated.
-            </p>
-          </div>
-        </div>
-
-        {/* Search Bar */}
+        {/* Search Bar (centered and positioned directly after the heading) */}
         <div className="max-w-md mx-auto mb-12 relative">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
             <Search className="h-5 w-5 text-zinc-400" />
           </div>
           <input
             type="search"
-            placeholder="Search award categories..."
+            placeholder="Search active award categories..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-11 pr-4 py-3 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 transition-all text-sm"
+            className="w-full pl-11 pr-4 py-3 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 transition-all text-sm animate-fade-in"
           />
         </div>
 
         {/* Results Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
           {filteredData.map((category) => {
             const catTotal = category.results.reduce((acc, curr) => acc + curr.count, 0);
             const contestantsCount = category.results.length;
@@ -188,7 +141,7 @@ export default function NominationResultsDisplay({ title, description, data }: N
                   {/* Category Header */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                     <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-xl ${someQualified ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border border-emerald-500/10' : 'bg-zinc-50 dark:bg-zinc-800/40 text-zinc-400 dark:text-zinc-500 border border-zinc-100 dark:border-zinc-800/80'}`}>
+                      <div className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border border-emerald-500/10">
                         <Award className="h-6 w-6" />
                       </div>
                       <h2 className="text-xl font-bold text-zinc-900 dark:text-white truncate max-w-[200px] sm:max-w-none">
@@ -207,11 +160,6 @@ export default function NominationResultsDisplay({ title, description, data }: N
                         <span className="inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-full bg-emerald-500/5 text-emerald-500 dark:text-emerald-400 border border-emerald-500/10">
                           <Unlock className="w-3.5 h-3.5 text-emerald-500" />
                           <span>{qualifiedCount} / {contestantsCount} Qualified</span>
-                        </span>
-                      ) : contestantsCount === 0 ? (
-                        <span className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700">
-                          <Lock className="w-3.5 h-3.5" />
-                          <span>Empty</span>
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500 border border-zinc-200 dark:border-zinc-800">
@@ -302,12 +250,6 @@ export default function NominationResultsDisplay({ title, description, data }: N
                         </div>
                       );
                     })}
-
-                    {contestantsCount === 0 && (
-                      <div className="text-center py-6 text-zinc-400 text-sm italic">
-                        No nominations recorded in this category yet.
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
@@ -316,10 +258,105 @@ export default function NominationResultsDisplay({ title, description, data }: N
         </div>
 
         {filteredData.length === 0 && (
-          <div className="text-center py-20 bg-white dark:bg-zinc-900 rounded-3xl border-2 border-dashed border-zinc-200 dark:border-zinc-800">
+          <div className="text-center py-20 bg-white dark:bg-zinc-900 rounded-3xl border-2 border-dashed border-zinc-200 dark:border-zinc-800 mb-16">
             <TrendingUp className="h-12 w-12 text-zinc-400 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">No results matching search</h3>
-            <p className="text-zinc-500 dark:text-zinc-400">Try searching for a different category name.</p>
+            <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">No categories found</h3>
+            <p className="text-zinc-500 dark:text-zinc-400">
+              Try adjusting your search query.
+            </p>
+          </div>
+        )}
+
+        {/* ─── Nomination Overview Dashboard (Moved below the category cards) ─── */}
+        <div className="border-t border-zinc-200 dark:border-zinc-800 pt-16 mt-16 animate-fade-in">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">
+              Nomination Statistics Overview
+            </h2>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-2">
+              System-wide metrics and benchmarks across all award categories.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Card 1: Candidates Qualified */}
+            <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="absolute right-4 top-4 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 p-3 rounded-2xl">
+                <Sparkles className="h-6 w-6" />
+              </div>
+              <p className="text-sm font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+                Candidates Qualified
+              </p>
+              <h3 className="text-4xl font-extrabold text-zinc-900 dark:text-white mt-2">
+                {stats.candidatesQualified} <span className="text-lg font-medium text-zinc-400">/ {stats.totalCandidatesCount}</span>
+              </h3>
+              {/* mini progress indicator */}
+              <div className="w-full h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full mt-4 overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-1000" 
+                  style={{ width: `${stats.qualifiedPercentage}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Card 2: Empty Categories */}
+            <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="absolute right-4 top-4 bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 p-3 rounded-2xl">
+                <Lock className="h-6 w-6" />
+              </div>
+              <p className="text-sm font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+                Empty Categories
+              </p>
+              <h3 className="text-4xl font-extrabold text-zinc-900 dark:text-white mt-2">
+                {stats.unnominatedCount} <span className="text-lg font-medium text-zinc-400">/ {data.length}</span>
+              </h3>
+              {/* mini progress indicator */}
+              <div className="w-full h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full mt-4 overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full transition-all duration-1000" 
+                  style={{ width: `${data.length > 0 ? (stats.unnominatedCount / data.length) * 100 : 0}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Card 3: Active Contestants */}
+            <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="absolute right-4 top-4 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 p-3 rounded-2xl">
+                <Users className="h-6 w-6" />
+              </div>
+              <p className="text-sm font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+                Active Contestants
+              </p>
+              <h3 className="text-4xl font-extrabold text-zinc-900 dark:text-white mt-2">
+                {stats.activeContestants}
+              </h3>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2">
+                Unique final-year students nominated.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* ─── Unnominated Categories List (The very last thing on the page) ─── */}
+        {stats.unnominatedList.length > 0 && (
+          <div className="border-t border-zinc-200 dark:border-zinc-800 pt-16 mt-16 animate-fade-in text-center">
+            <h2 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">
+              Unnominated Categories ({stats.unnominatedCount})
+            </h2>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-2 max-w-xl mx-auto leading-relaxed">
+              These categories currently have no nominees. Users can submit nominations in these categories to activate them!
+            </p>
+            <div className="flex flex-wrap justify-center gap-2 mt-8 max-w-4xl mx-auto">
+              {stats.unnominatedList.map((catName) => (
+                <div
+                  key={catName}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 shadow-sm transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/80 cursor-default"
+                >
+                  <Award className="w-3.5 h-3.5 text-zinc-400" />
+                  <span>{catName}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

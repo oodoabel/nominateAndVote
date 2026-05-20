@@ -1,6 +1,7 @@
 import React from "react";
 import { prisma } from "@/lib/prisma";
 import NominationResultsDisplay, { CategoryNominationResult } from "@/components/NominationResultsDisplay";
+import { awardCategories } from "@/data/awardCategories";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,11 @@ export default async function NominateResultsPage() {
 
   // Transform data into CategoryNominationResult format
   const groupedResults: Record<string, any[]> = {};
+  
+  // Initialize ALL categories so empty categories are visible too
+  awardCategories.forEach((cat) => {
+    groupedResults[cat.name] = [];
+  });
   
   nominations.forEach((item) => {
     if (!groupedResults[item.awardCategory]) {
@@ -44,7 +50,7 @@ export default async function NominateResultsPage() {
           .sort((a, b) => b.count - a.count), // Sort by count descending
       };
     }
-  );
+  ).sort((a, b) => a.category.localeCompare(b.category));
 
   return (
     <NominationResultsDisplay
