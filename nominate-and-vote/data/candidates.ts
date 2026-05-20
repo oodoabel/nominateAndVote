@@ -152,7 +152,8 @@ function inferGender(firstname: string, otherNames: string): "male" | "female" {
     combined.includes("chidinma") ||
     combined.includes("mercy") ||
     combined.includes("annorah") ||
-    combined.includes("hellen")
+    combined.includes("hellen") ||
+    combined.includes("miracle")
   ) {
     return "female";
   }
