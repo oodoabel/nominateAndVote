@@ -44,12 +44,12 @@ export default function Navbar({ appState }: { appState: AppState }) {
               >
                 Nominate
               </Link>
-              <Link
+              {/* <Link
                 href="/nominate/results"
                 className="text-sm font-medium text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors"
               >
                 Nominate Results
-              </Link>
+              </Link> */}
             </>
           )}
           {isVoting && (
@@ -94,13 +94,13 @@ export default function Navbar({ appState }: { appState: AppState }) {
                 >
                   Nominate
                 </Link>
-                <Link
+                {/* <Link
                   href="/nominate/results"
                   onClick={closeMenu}
                   className="block px-3 py-3 rounded-xl text-base font-medium text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
                 >
                   Nominate Results
-                </Link>
+                </Link> */}
                 <Link
                   href="https://docs.google.com/forms/d/e/1FAIpQLSczBrfotpQqq4tYLMnS7BjZwC9QNs54dhgeE9gF9s6_ZsI-qA/viewform?usp=header"
                   onClick={closeMenu}
