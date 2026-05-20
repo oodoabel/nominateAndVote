@@ -23,8 +23,8 @@ interface ResultsDisplayProps {
 
 export default function ResultsDisplay({ title, description, data, type }: ResultsDisplayProps) {
   const getGradient = () => {
-    return type === "nominate" 
-      ? "from-blue-600 to-indigo-600" 
+    return type === "nominate"
+      ? "from-blue-600 to-indigo-600"
       : "from-amber-500 to-orange-600";
   };
 
@@ -51,13 +51,13 @@ export default function ResultsDisplay({ title, description, data, type }: Resul
         {/* Results Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {data.map((category, catIdx) => (
-            <div 
+            <div
               key={category.category}
               className="group relative overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-2xl transition-all duration-500 p-8"
             >
               {/* Card Background Glow */}
               <div className={`absolute -right-20 -top-20 h-64 w-64 rounded-full bg-gradient-to-br ${getGradient()} opacity-5 blur-3xl group-hover:opacity-10 transition-opacity duration-500`} />
-              
+
               <div className="relative z-10">
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center gap-3">
@@ -96,12 +96,12 @@ export default function ResultsDisplay({ title, description, data, type }: Resul
                       </div>
 
                       <div className="relative h-2 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                        <div 
+                        <div
                           className={`absolute inset-y-0 left-0 bg-gradient-to-r ${getGradient()} transition-all duration-1000 ease-out rounded-full`}
                           style={{ width: `${candidate.percentage}%` }}
                         />
                       </div>
-                      
+
                       <div className="flex justify-end">
                         <span className="text-[10px] font-semibold text-zinc-400">
                           {candidate.percentage.toFixed(1)}%

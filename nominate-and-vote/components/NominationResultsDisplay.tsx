@@ -91,15 +91,9 @@ export default function NominationResultsDisplay({ title, description, data }: N
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header Section */}
         <div className="text-center mb-12 space-y-4">
-          <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-white dark:bg-zinc-900 shadow-xl border border-zinc-200 dark:border-zinc-800">
-            <BarChart3 className="h-8 w-8 text-blue-600 dark:text-blue-500" />
-          </div>
           <h1 className="text-4xl md:text-6xl font-black tracking-tight text-zinc-900 dark:text-white">
             {title}
           </h1>
-          <p className="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-            {description}
-          </p>
         </div>
 
         {/* Search Bar (centered and positioned directly after the heading) */}
@@ -278,8 +272,24 @@ export default function NominationResultsDisplay({ title, description, data }: N
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Card 1: Candidates Qualified */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Card 1: Total Nominations */}
+            <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="absolute right-4 top-4 bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 p-3 rounded-2xl">
+                <TrendingUp className="h-6 w-6" />
+              </div>
+              <p className="text-sm font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+                Total Nominations
+              </p>
+              <h3 className="text-4xl font-extrabold text-zinc-900 dark:text-white mt-2">
+                {stats.totalNominations.toLocaleString()}
+              </h3>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2">
+                Total nominations submitted across all categories.
+              </p>
+            </div>
+
+            {/* Card 2: Candidates Qualified */}
             <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:shadow-md transition-shadow">
               <div className="absolute right-4 top-4 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 p-3 rounded-2xl">
                 <Sparkles className="h-6 w-6" />
@@ -299,7 +309,7 @@ export default function NominationResultsDisplay({ title, description, data }: N
               </div>
             </div>
 
-            {/* Card 2: Empty Categories */}
+            {/* Card 3: Empty Categories */}
             <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:shadow-md transition-shadow">
               <div className="absolute right-4 top-4 bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 p-3 rounded-2xl">
                 <Lock className="h-6 w-6" />
@@ -319,7 +329,7 @@ export default function NominationResultsDisplay({ title, description, data }: N
               </div>
             </div>
 
-            {/* Card 3: Active Contestants */}
+            {/* Card 4: Active Contestants */}
             <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:shadow-md transition-shadow">
               <div className="absolute right-4 top-4 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 p-3 rounded-2xl">
                 <Users className="h-6 w-6" />

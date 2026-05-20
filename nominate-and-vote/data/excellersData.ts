@@ -712,7 +712,7 @@ export const excellersData = [
       "Do not give up, pray fervently and you see the lord helping you",
     japaOrStay: "Japa",
     photoUrl:
-      "https://drive.google.com/open?id=1dUeRqtv6krz-_ZqzW52TtcoVKzLDXDMo",
+      "/gladys.jpeg",
   },
   {
     timestamp: "2026-03-06 18:13:41.413000",

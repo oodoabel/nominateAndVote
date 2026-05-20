@@ -55,7 +55,7 @@ export default async function NominateResultsPage() {
   return (
     <NominationResultsDisplay
       title="Nomination Live Standings"
-      description="Real-time aggregation of candidate nominations across all award categories. These numbers represent the total nomination weight from all verified payments."
+      description=""
       data={formattedData}
     />
   );
