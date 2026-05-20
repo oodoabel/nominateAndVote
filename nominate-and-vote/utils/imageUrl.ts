@@ -14,8 +14,11 @@ export function getImageUrl(photoUrl: string): string {
     }
   }
 
-  // 2. Local filenames – assume they are in /public/images/
+  // 2. Local filenames – assume they are in /public/images/ unless they start with a slash
   if (!photoUrl.startsWith("http")) {
+    if (photoUrl.startsWith("/")) {
+      return photoUrl;
+    }
     return `/images/${photoUrl}`;
   }
 

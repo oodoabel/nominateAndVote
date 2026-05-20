@@ -1,6 +1,6 @@
 import React from "react";
 import { prisma } from "@/lib/prisma";
-import ResultsDisplay, { CategoryResult } from "@/components/ResultsDisplay";
+import NominationResultsDisplay, { CategoryNominationResult } from "@/components/NominationResultsDisplay";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +16,7 @@ export default async function NominateResultsPage() {
     },
   });
 
-  // Transform data into CategoryResult format
+  // Transform data into CategoryNominationResult format
   const groupedResults: Record<string, any[]> = {};
   
   nominations.forEach((item) => {
@@ -29,7 +29,7 @@ export default async function NominateResultsPage() {
     });
   });
 
-  const formattedData: CategoryResult[] = Object.entries(groupedResults).map(
+  const formattedData: CategoryNominationResult[] = Object.entries(groupedResults).map(
     ([category, results]) => {
       // Calculate total for percentages
       const total = results.reduce((acc, curr) => acc + curr.count, 0);
@@ -47,11 +47,10 @@ export default async function NominateResultsPage() {
   );
 
   return (
-    <ResultsDisplay
+    <NominationResultsDisplay
       title="Nomination Live Standings"
       description="Real-time aggregation of candidate nominations across all award categories. These numbers represent the total nomination weight from all verified payments."
       data={formattedData}
-      type="nominate"
     />
   );
 }

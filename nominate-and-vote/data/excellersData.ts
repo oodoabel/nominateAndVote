@@ -267,7 +267,7 @@ export const excellersData = [
     partingWords: "Do all you can while still have time.",
     japaOrStay: "Japa",
     photoUrl:
-      "https://drive.google.com/open?id=1rX6o8aOu6HcxxwOpjejH6ADxnqPnWvRd",
+      "/richard.jpeg",
   },
   {
     timestamp: "2026-03-04 01:48:20.140000",

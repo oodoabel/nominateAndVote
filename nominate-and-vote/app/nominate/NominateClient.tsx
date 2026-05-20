@@ -5,7 +5,7 @@ const PaystackButton = dynamic(
   { ssr: false },
 );
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   UserPlus,
@@ -81,6 +81,21 @@ export default function NominatePage() {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [isPictureFullSizeOpen, setIsPictureFullSizeOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsPictureFullSizeOpen(false);
+      }
+    };
+    if (isPictureFullSizeOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isPictureFullSizeOpen]);
 
   const totalAmount = nominationCount * NOMINATION_PRICE;
 
@@ -188,6 +203,7 @@ export default function NominatePage() {
 
   const closePreviewModal = () => {
     setPreviewCandidate(null);
+    setIsPictureFullSizeOpen(false);
   };
 
   const handlePayment = () => {
@@ -302,7 +318,15 @@ export default function NominatePage() {
             <div className="overflow-y-auto p-0">
               {/* Header / Big Image */}
               <div className="bg-gradient-to-b from-blue-100 to-white dark:from-blue-900/30 dark:to-zinc-900 pt-12 pb-6 px-6 sm:px-10 flex flex-col items-center text-center">
-                <div className="w-50 h-50 sm:w-48 sm:h-48 bg-white dark:bg-zinc-800 rounded-full shadow-xl p-2 mb-4">
+                <div 
+                  className="w-50 h-50 sm:w-48 sm:h-48 bg-white dark:bg-zinc-800 rounded-full shadow-xl p-2 mb-4 cursor-zoom-in hover:scale-105 active:scale-95 transition-all duration-300 relative group/pic"
+                  onClick={() => setIsPictureFullSizeOpen(true)}
+                  title="Click to view full size"
+                >
+                  <div className="absolute inset-2 bg-black/40 rounded-full opacity-0 group-hover/pic:opacity-100 transition-opacity duration-300 flex items-center justify-center text-white text-xs font-bold gap-1 backdrop-blur-[2px]">
+                    <Eye className="w-4 h-4" />
+                    <span>View Full Size</span>
+                  </div>
                   <Image
                     src={previewCandidate.image}
                     alt={previewCandidate.firstname}
@@ -631,6 +655,50 @@ export default function NominatePage() {
                 </PaystackButton>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Full-size image viewer modal */}
+      {isPictureFullSizeOpen && previewCandidate && (
+        <div 
+          className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-200 cursor-zoom-out"
+          onClick={() => setIsPictureFullSizeOpen(false)}
+        >
+          {/* Close button */}
+          <button
+            onClick={() => setIsPictureFullSizeOpen(false)}
+            className="absolute top-6 right-6 z-[210] bg-white/10 hover:bg-white/20 p-3 rounded-full text-white/80 hover:text-white transition-colors duration-200"
+            aria-label="Close full size picture"
+          >
+            <X className="w-6 h-6" />
+          </button>
+          
+          {/* Image container */}
+          <div 
+            className="relative max-w-full max-h-full flex flex-col items-center justify-center animate-in zoom-in-95 duration-200 cursor-default"
+            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking on the image itself
+          >
+            <Image
+              src={previewCandidate.image}
+              alt={`${previewCandidate.firstname} ${previewCandidate.otherNames}`}
+              width={1200}
+              height={1200}
+              unoptimized
+              className="max-w-[90vw] max-h-[80vh] object-contain rounded-2xl shadow-2xl ring-1 ring-white/10"
+            />
+            
+            {/* Caption */}
+            <div className="mt-4 text-center">
+              <h3 className="text-xl font-bold text-white">
+                {previewCandidate.firstname} {previewCandidate.otherNames}
+              </h3>
+              {previewCandidate.nickname && (
+                <p className="text-sm font-medium text-blue-400 mt-1">
+                  "{previewCandidate.nickname}"
+                </p>
+              )}
+            </div>
           </div>
         </div>
       )}
