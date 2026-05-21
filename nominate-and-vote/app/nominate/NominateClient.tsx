@@ -206,8 +206,8 @@ export default function NominatePage() {
 
   const filteredAwards = selectedCandidate
     ? getEligibleAwards(selectedCandidate.gender).filter((award) =>
-        award.name.toLowerCase().includes(awardSearch.toLowerCase()),
-      )
+      award.name.toLowerCase().includes(awardSearch.toLowerCase()),
+    )
     : [];
 
   const closePreviewModal = () => {
@@ -342,7 +342,7 @@ export default function NominatePage() {
             <div className="overflow-y-auto p-0">
               {/* Header / Big Image */}
               <div className="bg-gradient-to-b from-blue-100 to-white dark:from-blue-900/30 dark:to-zinc-900 pt-12 pb-6 px-6 sm:px-10 flex flex-col items-center text-center">
-                <div 
+                <div
                   className="w-50 h-50 sm:w-48 sm:h-48 bg-white dark:bg-zinc-800 rounded-full shadow-xl p-2 mb-4 cursor-zoom-in hover:scale-105 active:scale-95 transition-all duration-300 relative group/pic"
                   onClick={() => setIsPictureFullSizeOpen(true)}
                   title="Click to view full size"
@@ -521,34 +521,28 @@ export default function NominatePage() {
 
                 {/* Award Category Selector */}
                 <div className="mb-6">
-                  <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-3">
-                    Award Category
-                  </label>
                   <div className="relative">
                     <button
                       type="button"
                       onClick={() => setAwardDropdownOpen(!awardDropdownOpen)}
-                      className={`w-full flex items-center justify-between p-3 border rounded-xl bg-zinc-50 dark:bg-zinc-800/50 text-left transition-colors ${
-                        selectedAward
+                      className={`w-full flex items-center justify-between p-3 border rounded-xl bg-zinc-50 dark:bg-zinc-800/50 text-left transition-colors ${selectedAward
                           ? "border-blue-500 ring-1 ring-blue-500"
                           : "border-zinc-200 dark:border-zinc-800"
-                      }`}
+                        }`}
                     >
                       <span
-                        className={`text-sm ${
-                          selectedAward
+                        className={`text-sm ${selectedAward
                             ? "text-zinc-900 dark:text-white font-medium"
                             : "text-zinc-400"
-                        }`}
+                          }`}
                       >
                         {selectedAward
                           ? selectedAward.name
                           : "Select an award category..."}
                       </span>
                       <ChevronDown
-                        className={`w-4 h-4 text-zinc-400 transition-transform ${
-                          awardDropdownOpen ? "rotate-180" : ""
-                        }`}
+                        className={`w-4 h-4 text-zinc-400 transition-transform ${awardDropdownOpen ? "rotate-180" : ""
+                          }`}
                       />
                     </button>
 
@@ -578,21 +572,19 @@ export default function NominatePage() {
                                   setAwardDropdownOpen(false);
                                   setAwardSearch("");
                                 }}
-                                className={`w-full flex items-center justify-between px-4 py-2.5 text-sm hover:bg-blue-50 dark:hover:bg-zinc-700 transition-colors text-left ${
-                                  selectedAward?.id === award.id
+                                className={`w-full flex items-center justify-between px-4 py-2.5 text-sm hover:bg-blue-50 dark:hover:bg-zinc-700 transition-colors text-left ${selectedAward?.id === award.id
                                     ? "bg-blue-50 dark:bg-zinc-700 text-blue-600 dark:text-blue-400 font-medium"
                                     : "text-zinc-700 dark:text-zinc-300"
-                                }`}
+                                  }`}
                               >
                                 <span>{award.name}</span>
                                 <span
-                                  className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
-                                    award.gender === "male"
+                                  className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${award.gender === "male"
                                       ? "bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400"
                                       : award.gender === "female"
                                         ? "bg-pink-100 dark:bg-pink-900/40 text-pink-600 dark:text-pink-400"
                                         : "bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400"
-                                  }`}
+                                    }`}
                                 >
                                   {award.gender === "male"
                                     ? "♂ Male"
@@ -617,11 +609,10 @@ export default function NominatePage() {
                       setIsQualifyMode(false);
                       setNominationCount(1);
                     }}
-                    className={`flex-1 text-center py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
-                      !isQualifyMode
+                    className={`flex-1 text-center py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${!isQualifyMode
                         ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-sm"
                         : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300"
-                    }`}
+                      }`}
                   >
                     Standard
                   </button>
@@ -636,11 +627,10 @@ export default function NominatePage() {
                         setNominationCount(100);
                       }
                     }}
-                    className={`flex-1 flex items-center justify-center gap-1 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
-                      isQualifyMode
+                    className={`flex-1 flex items-center justify-center gap-1 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${isQualifyMode
                         ? "bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-600 text-white shadow-sm"
                         : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300"
-                    }`}
+                      }`}
                   >
                     <Sparkles className="w-3.5 h-3.5" />
                     Qualify Me
@@ -658,16 +648,16 @@ export default function NominatePage() {
                       </span>
                       {selectedAward && (
                         <span className="text-xs bg-yellow-500/20 text-yellow-800 dark:text-yellow-350 px-2 py-0.5 rounded-full font-bold">
-                          {getCategoryBenchmark(selectedAward.name, `${selectedCandidate.firstname} ${selectedCandidate.otherNames}`) === 160 
-                            ? "Single-Contestant" 
+                          {getCategoryBenchmark(selectedAward.name, `${selectedCandidate.firstname} ${selectedCandidate.otherNames}`) === 160
+                            ? "Single-Contestant"
                             : "Multi-Contestant"}
                         </span>
                       )}
                     </div>
                     <p className="text-xs text-zinc-650 dark:text-zinc-400 mb-3 leading-relaxed">
-                      {selectedAward 
+                      {selectedAward
                         ? `This category requires ${getCategoryBenchmark(selectedAward.name, `${selectedCandidate.firstname} ${selectedCandidate.otherNames}`)} nominations to qualify a candidate for voting.`
-                        : "Select an award category below to determine the required qualification benchmark (100 or 160 nominations)."
+                        : "Select an award category to view required nominations."
                       }
                     </p>
                     <div className="flex items-center justify-between bg-white dark:bg-zinc-800 px-4 py-3 rounded-xl border border-zinc-200 dark:border-zinc-700">
@@ -680,9 +670,6 @@ export default function NominatePage() {
                 ) : (
                   /* Number of Nominations */
                   <div className="mb-6">
-                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-3">
-                      Number of Nominations
-                    </label>
                     <div className="flex items-center justify-between p-2 border border-zinc-200 dark:border-zinc-800 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50">
                       <button
                         type="button"
@@ -710,26 +697,20 @@ export default function NominatePage() {
                 {/* Voter Details */}
                 <div className="mb-6 space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                      Your Name
-                    </label>
                     <input
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="Enter your name"
+                      placeholder="Your name"
                       className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-zinc-900 dark:text-white placeholder:text-zinc-400"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                      Email Address
-                    </label>
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email"
+                      placeholder="Your email address"
                       className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-zinc-900 dark:text-white placeholder:text-zinc-400"
                     />
                   </div>
@@ -748,13 +729,12 @@ export default function NominatePage() {
                 <PaystackButton
                   {...paystackProps}
                   disabled={!selectedAward || !email || !name}
-                  className={`w-full flex items-center justify-center gap-2 font-semibold py-4 px-4 rounded-xl transition-all ${
-                    selectedAward && email && name
+                  className={`w-full flex items-center justify-center gap-2 font-semibold py-4 px-4 rounded-xl transition-all ${selectedAward && email && name
                       ? isQualifyMode
                         ? "bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-600 hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-750 text-white hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-yellow-500/20"
                         : "bg-blue-600 hover:bg-blue-700 text-white hover:scale-[1.02] active:scale-[0.98]"
                       : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed"
-                  }`}
+                    }`}
                 >
                   {!(email && name)
                     ? "Enter name and email"
@@ -772,7 +752,7 @@ export default function NominatePage() {
 
       {/* Full-size image viewer modal */}
       {isPictureFullSizeOpen && previewCandidate && (
-        <div 
+        <div
           className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-200 cursor-zoom-out"
           onClick={() => setIsPictureFullSizeOpen(false)}
         >
@@ -784,9 +764,9 @@ export default function NominatePage() {
           >
             <X className="w-6 h-6" />
           </button>
-          
+
           {/* Image container */}
-          <div 
+          <div
             className="relative max-w-full max-h-full flex flex-col items-center justify-center animate-in zoom-in-95 duration-200 cursor-default"
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking on the image itself
           >
@@ -798,7 +778,7 @@ export default function NominatePage() {
               unoptimized
               className="max-w-[90vw] max-h-[80vh] object-contain rounded-2xl shadow-2xl ring-1 ring-white/10"
             />
-            
+
             {/* Caption */}
             <div className="mt-4 text-center">
               <h3 className="text-xl font-bold text-white">
