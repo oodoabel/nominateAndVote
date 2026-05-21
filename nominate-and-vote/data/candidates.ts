@@ -49,6 +49,7 @@ const femaleNames = [
   "Joy",
   "Favour",
   "Chidinma",
+  "Gladys",
   "Nwagbo", // Peter Ifeanyi? No, that's Peter.
   "Anekwe", // Ngozi Catherine
   "Okoli", // This is a surname, but Chibuifem Justin is male.
@@ -81,7 +82,6 @@ const maleNames = [
   "Simon",
   "Shalom",
   "Bensirus",
-  "Solomon",
   "Mathias",
   "David",
   "Martin",
@@ -153,7 +153,8 @@ function inferGender(firstname: string, otherNames: string): "male" | "female" {
     combined.includes("mercy") ||
     combined.includes("annorah") ||
     combined.includes("hellen") ||
-    combined.includes("miracle")
+    combined.includes("miracle") ||
+    combined.includes("gladys")
   ) {
     return "female";
   }

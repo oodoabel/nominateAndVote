@@ -14,6 +14,7 @@ import {
   Search,
   Eye,
   ChevronDown,
+  Sparkles,
 } from "lucide-react";
 import { candidates, Candidate } from "@/data/candidates";
 import { awardCategories, AwardCategory } from "@/data/awardCategories";
@@ -41,6 +42,42 @@ export default function NominatePage() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [isPictureFullSizeOpen, setIsPictureFullSizeOpen] = useState(false);
+  const [standings, setStandings] = useState<Array<{ category: string; candidateName: string; count: number }>>([]);
+  const [isQualifyMode, setIsQualifyMode] = useState(false);
+
+  useEffect(() => {
+    async function fetchStandings() {
+      try {
+        const res = await fetch("/api/nominations");
+        const json = await res.json();
+        if (json.success && json.standings) {
+          setStandings(json.standings);
+        }
+      } catch (err) {
+        console.error("Failed to load standings:", err);
+      }
+    }
+    fetchStandings();
+  }, [paymentSuccess]);
+
+  const getCategoryBenchmark = (categoryName: string, candidateName: string) => {
+    const nomineesInCategory = standings.filter(
+      (s) => s.category.toLowerCase() === categoryName.toLowerCase() && s.count > 0
+    );
+
+    const uniqueCandidates = new Set(nomineesInCategory.map((s) => s.candidateName.toLowerCase()));
+    uniqueCandidates.add(candidateName.toLowerCase());
+
+    return uniqueCandidates.size >= 2 ? 100 : 160;
+  };
+
+  useEffect(() => {
+    if (selectedCandidate && selectedAward && isQualifyMode) {
+      const candidateFullName = `${selectedCandidate.firstname} ${selectedCandidate.otherNames}`;
+      const targetBenchmark = getCategoryBenchmark(selectedAward.name, candidateFullName);
+      setNominationCount(targetBenchmark);
+    }
+  }, [selectedAward, isQualifyMode, selectedCandidate, standings]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -70,7 +107,20 @@ export default function NominatePage() {
 
   const handleNominateClick = (candidate: (typeof candidates)[0]) => {
     setSelectedCandidate(candidate);
+    setIsQualifyMode(false);
     setNominationCount(1);
+    setSelectedAward(null);
+    setAwardDropdownOpen(false);
+    setAwardSearch("");
+    setPaymentSuccess(false);
+    setEmail("");
+    setName("");
+  };
+
+  const handleQualifyClick = (candidate: (typeof candidates)[0]) => {
+    setSelectedCandidate(candidate);
+    setIsQualifyMode(true);
+    setNominationCount(100);
     setSelectedAward(null);
     setAwardDropdownOpen(false);
     setAwardSearch("");
@@ -208,25 +258,40 @@ export default function NominatePage() {
               key={candidate.id}
               className="group flex flex-col bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300"
             >
-              {/* Image Area - Clickable for Preview */}
-              <button
-                onClick={() => handlePreviewClick(candidate)}
-                className="relative w-full aspect-square bg-zinc-100 dark:bg-zinc-800/50  flex items-center justify-center cursor-pointer group/img overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center z-10">
-                  <span className="bg-white/90 text-zinc-900 text-xs font-bold py-1 px-3 rounded-full flex items-center gap-1 shadow-lg">
-                    <Eye className="w-3 h-3" /> Preview
-                  </span>
-                </div>
-                <Image
-                  src={candidate.image}
-                  alt={candidate.firstname}
-                  width={500}
-                  height={500}
-                  unoptimized
-                  className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-500"
-                />
-              </button>
+              {/* Image Area - Clickable for Preview & Floating Badge */}
+              <div className="relative w-full aspect-square bg-zinc-100 dark:bg-zinc-800/50 overflow-hidden">
+                <button
+                  onClick={() => handlePreviewClick(candidate)}
+                  className="w-full h-full cursor-pointer group/img relative block"
+                >
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center z-10">
+                    <span className="bg-white/90 text-zinc-900 text-xs font-bold py-1 px-3 rounded-full flex items-center gap-1 shadow-lg">
+                      <Eye className="w-3 h-3" /> Preview
+                    </span>
+                  </div>
+                  <Image
+                    src={candidate.image}
+                    alt={candidate.firstname}
+                    width={500}
+                    height={500}
+                    unoptimized
+                    className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-500"
+                  />
+                </button>
+
+                {/* Premium Floating Qualify Badge */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleQualifyClick(candidate);
+                  }}
+                  className="absolute top-3 right-3 z-20 flex items-center justify-center gap-1 bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-600 hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-750 text-white text-[10px] sm:text-xs font-extrabold py-1 px-2.5 rounded-full shadow-lg shadow-yellow-500/20 active:scale-95 transition-all"
+                  title="Qualify candidate (Bulk nomination)"
+                >
+                  <Sparkles className="w-3 h-3" />
+                  <span>Qualify Me</span>
+                </button>
+              </div>
 
               <div className="p-4 flex flex-col flex-1">
                 <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-white mb-1 truncate">
@@ -371,15 +436,26 @@ export default function NominatePage() {
                   />
                 </div>
 
-                <div className="mt-10">
+                <div className="mt-10 flex flex-col sm:flex-row gap-4">
                   <button
                     onClick={() => {
                       closePreviewModal();
                       handleNominateClick(previewCandidate);
                     }}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all hover:-translate-y-1"
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all hover:-translate-y-1 flex items-center justify-center gap-2"
                   >
-                    Nominate {previewCandidate.firstname} Now
+                    <UserPlus className="w-5 h-5" />
+                    Nominate {previewCandidate.firstname}
+                  </button>
+                  <button
+                    onClick={() => {
+                      closePreviewModal();
+                      handleQualifyClick(previewCandidate);
+                    }}
+                    className="flex-1 bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-600 hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-750 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-yellow-500/20 transition-all hover:-translate-y-1 flex items-center justify-center gap-2"
+                  >
+                    <Sparkles className="w-5 h-5" />
+                    Click to Qualify Me
                   </button>
                 </div>
               </div>
@@ -533,31 +609,103 @@ export default function NominatePage() {
                   </div>
                 </div>
 
-                {/* Number of Nominations */}
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-3">
-                    Number of Nominations
-                  </label>
-                  <div className="flex items-center justify-between p-2 border border-zinc-200 dark:border-zinc-800 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50">
-                    <button
-                      onClick={() =>
-                        setNominationCount(Math.max(1, nominationCount - 1))
+                {/* Mode Selector / Tab */}
+                <div className="mb-6 flex p-1 bg-zinc-150 dark:bg-zinc-800 rounded-xl">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsQualifyMode(false);
+                      setNominationCount(1);
+                    }}
+                    className={`flex-1 text-center py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
+                      !isQualifyMode
+                        ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-sm"
+                        : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300"
+                    }`}
+                  >
+                    Standard
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsQualifyMode(true);
+                      if (selectedAward) {
+                        const candidateFullName = `${selectedCandidate.firstname} ${selectedCandidate.otherNames}`;
+                        setNominationCount(getCategoryBenchmark(selectedAward.name, candidateFullName));
+                      } else {
+                        setNominationCount(100);
                       }
-                      className="w-12 h-12 flex items-center justify-center rounded-xl bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-sm hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-colors"
-                    >
-                      -
-                    </button>
-                    <span className="text-2xl font-bold text-zinc-900 dark:text-white w-16 text-center">
-                      {nominationCount}
-                    </span>
-                    <button
-                      onClick={() => setNominationCount(nominationCount + 1)}
-                      className="w-12 h-12 flex items-center justify-center rounded-xl bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-sm hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-colors"
-                    >
-                      +
-                    </button>
-                  </div>
+                    }}
+                    className={`flex-1 flex items-center justify-center gap-1 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
+                      isQualifyMode
+                        ? "bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-600 text-white shadow-sm"
+                        : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300"
+                    }`}
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                    Qualify Me
+                  </button>
                 </div>
+
+                {isQualifyMode ? (
+                  <div className="mb-6 p-4 rounded-2xl bg-gradient-to-br from-yellow-500/10 via-amber-500/5 to-yellow-600/10 border border-yellow-500/30 dark:border-yellow-500/25 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-3 opacity-10">
+                      <Sparkles className="w-16 h-16 text-yellow-500" />
+                    </div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-bold text-yellow-750 dark:text-yellow-400 uppercase tracking-wider flex items-center gap-1">
+                        <Sparkles className="w-3.5 h-3.5 animate-pulse" /> Bulk Qualification Active
+                      </span>
+                      {selectedAward && (
+                        <span className="text-xs bg-yellow-500/20 text-yellow-800 dark:text-yellow-350 px-2 py-0.5 rounded-full font-bold">
+                          {getCategoryBenchmark(selectedAward.name, `${selectedCandidate.firstname} ${selectedCandidate.otherNames}`) === 160 
+                            ? "Single-Contestant" 
+                            : "Multi-Contestant"}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-zinc-650 dark:text-zinc-400 mb-3 leading-relaxed">
+                      {selectedAward 
+                        ? `This category requires ${getCategoryBenchmark(selectedAward.name, `${selectedCandidate.firstname} ${selectedCandidate.otherNames}`)} nominations to qualify a candidate for voting.`
+                        : "Select an award category below to determine the required qualification benchmark (100 or 160 nominations)."
+                      }
+                    </p>
+                    <div className="flex items-center justify-between bg-white dark:bg-zinc-800 px-4 py-3 rounded-xl border border-zinc-200 dark:border-zinc-700">
+                      <span className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">Required Nominations:</span>
+                      <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-600">
+                        {nominationCount}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  /* Number of Nominations */
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-3">
+                      Number of Nominations
+                    </label>
+                    <div className="flex items-center justify-between p-2 border border-zinc-200 dark:border-zinc-800 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setNominationCount(Math.max(1, nominationCount - 1))
+                        }
+                        className="w-12 h-12 flex items-center justify-center rounded-xl bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-sm hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-colors"
+                      >
+                        -
+                      </button>
+                      <span className="text-2xl font-bold text-zinc-900 dark:text-white w-16 text-center">
+                        {nominationCount}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setNominationCount(nominationCount + 1)}
+                        className="w-12 h-12 flex items-center justify-center rounded-xl bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-sm hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-colors"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {/* Voter Details */}
                 <div className="mb-6 space-y-4">
@@ -602,7 +750,9 @@ export default function NominatePage() {
                   disabled={!selectedAward || !email || !name}
                   className={`w-full flex items-center justify-center gap-2 font-semibold py-4 px-4 rounded-xl transition-all ${
                     selectedAward && email && name
-                      ? "bg-blue-600 hover:bg-blue-700 text-white hover:scale-[1.02] active:scale-[0.98]"
+                      ? isQualifyMode
+                        ? "bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-600 hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-750 text-white hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-yellow-500/20"
+                        : "bg-blue-600 hover:bg-blue-700 text-white hover:scale-[1.02] active:scale-[0.98]"
                       : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed"
                   }`}
                 >
@@ -610,7 +760,9 @@ export default function NominatePage() {
                     ? "Enter name and email"
                     : !selectedAward
                       ? "Select an award category"
-                      : "Proceed to Pay"}
+                      : isQualifyMode
+                        ? `Click to Qualify Me (₦${totalAmount.toLocaleString()})`
+                        : "Proceed to Pay"}
                 </PaystackButton>
               </>
             )}

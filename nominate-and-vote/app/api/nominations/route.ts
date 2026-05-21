@@ -61,3 +61,28 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export async function GET() {
+  try {
+    const nominations = await prisma.nominationPayment.groupBy({
+      by: ["awardCategory", "candidateName"],
+      _sum: {
+        nominationCount: true,
+      },
+    });
+
+    const standings = nominations.map((item) => ({
+      category: item.awardCategory,
+      candidateName: item.candidateName,
+      count: item._sum.nominationCount || 0,
+    }));
+
+    return NextResponse.json({ success: true, standings });
+  } catch (error: any) {
+    console.error("Error fetching standings:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch standings" },
+      { status: 500 },
+    );
+  }
+}
