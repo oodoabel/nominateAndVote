@@ -3054,7 +3054,6 @@ export const excellersData = [
     japaOrStay: "",
     photoUrl: "/star-girls.jpeg",
   },
-  ,
   {
     timestamp: "",
     firstname: "ZACH and JENNY",
@@ -3077,7 +3076,6 @@ export const excellersData = [
     japaOrStay: "",
     photoUrl: "/zach-jenny.jpeg",
   },
-  ,
   {
     timestamp: "",
     firstname: "BLOODLINE ",
@@ -3101,7 +3099,6 @@ export const excellersData = [
     japaOrStay: "",
     photoUrl: "/bloodline.jpeg",
   },
-  ,
   {
     timestamp: "",
     firstname: "Chocolate and Caramel Oouuiii ",
