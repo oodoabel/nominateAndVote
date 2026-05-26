@@ -1,18 +1,18 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { 
-  Award, 
-  TrendingUp, 
-  Trophy, 
-  Users, 
-  CheckCircle2, 
-  Lock, 
-  Unlock, 
-  Info, 
+import {
+  Award,
+  TrendingUp,
+  Trophy,
+  Users,
+  CheckCircle2,
+  Lock,
+  Unlock,
+  Info,
   Search,
   Sparkles,
-  BarChart3
+  BarChart3,
 } from "lucide-react";
 
 export type ResultItem = {
@@ -32,7 +32,11 @@ interface NominationResultsDisplayProps {
   data: CategoryNominationResult[];
 }
 
-export default function NominationResultsDisplay({ title, description, data }: NominationResultsDisplayProps) {
+export default function NominationResultsDisplay({
+  title,
+  description,
+  data,
+}: NominationResultsDisplayProps) {
   const [searchTerm, setSearchTerm] = useState("");
 
   // 1. Calculate overall system statistics for the dashboard
@@ -66,7 +70,10 @@ export default function NominationResultsDisplay({ title, description, data }: N
       activeContestants: uniqueContestants.size,
       totalCandidatesCount,
       candidatesQualified,
-      qualifiedPercentage: totalCandidatesCount > 0 ? (candidatesQualified / totalCandidatesCount) * 100 : 0,
+      qualifiedPercentage:
+        totalCandidatesCount > 0
+          ? (candidatesQualified / totalCandidatesCount) * 100
+          : 0,
       unnominatedCount: unnominatedList.length,
       unnominatedList,
     };
@@ -113,24 +120,32 @@ export default function NominationResultsDisplay({ title, description, data }: N
         {/* Results Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
           {filteredData.map((category) => {
-            const catTotal = category.results.reduce((acc, curr) => acc + curr.count, 0);
+            const catTotal = category.results.reduce(
+              (acc, curr) => acc + curr.count,
+              0,
+            );
             const contestantsCount = category.results.length;
             const isSingleContestant = contestantsCount === 1;
             const benchmark = isSingleContestant ? 160 : 100;
-            
+
             // Count how many candidates in this category are qualified
-            const qualifiedCount = category.results.filter(r => r.count >= benchmark).length;
+            const qualifiedCount = category.results.filter(
+              (r) => r.count >= benchmark,
+            ).length;
             const someQualified = qualifiedCount > 0;
-            const allQualified = qualifiedCount === contestantsCount && contestantsCount > 0;
+            const allQualified =
+              qualifiedCount === contestantsCount && contestantsCount > 0;
 
             return (
-              <div 
+              <div
                 key={category.category}
                 className="group relative overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-2xl transition-all duration-500 p-8 flex flex-col justify-between"
               >
                 {/* Glow Effects */}
-                <div className={`absolute -right-20 -top-20 h-64 w-64 rounded-full bg-gradient-to-br ${someQualified ? 'from-emerald-500 to-teal-500' : 'from-blue-600 to-indigo-600'} opacity-5 blur-3xl group-hover:opacity-10 transition-opacity duration-500`} />
-                
+                <div
+                  className={`absolute -right-20 -top-20 h-64 w-64 rounded-full bg-gradient-to-br ${someQualified ? "from-emerald-500 to-teal-500" : "from-blue-600 to-indigo-600"} opacity-5 blur-3xl group-hover:opacity-10 transition-opacity duration-500`}
+                />
+
                 <div className="relative z-10 flex-1">
                   {/* Category Header */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -148,12 +163,16 @@ export default function NominationResultsDisplay({ title, description, data }: N
                       {allQualified ? (
                         <span className="inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shadow-[0_0_15px_-3px_rgba(16,185,129,0.3)] animate-pulse">
                           <Unlock className="w-3.5 h-3.5" />
-                          <span>All Qualified ({qualifiedCount}/{contestantsCount})</span>
+                          <span>
+                            All Qualified ({qualifiedCount}/{contestantsCount})
+                          </span>
                         </span>
                       ) : someQualified ? (
                         <span className="inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-full bg-emerald-500/5 text-emerald-500 dark:text-emerald-400 border border-emerald-500/10">
                           <Unlock className="w-3.5 h-3.5 text-emerald-500" />
-                          <span>{qualifiedCount} / {contestantsCount} Qualified</span>
+                          <span>
+                            {qualifiedCount} / {contestantsCount} Qualified
+                          </span>
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500 border border-zinc-200 dark:border-zinc-800">
@@ -179,7 +198,10 @@ export default function NominationResultsDisplay({ title, description, data }: N
                         Required Target
                       </span>
                       <span className="text-xl font-extrabold text-zinc-900 dark:text-white">
-                        {benchmark} <span className="text-xs font-normal text-zinc-500">per contestant</span>
+                        {benchmark}{" "}
+                        <span className="text-xs font-normal text-zinc-500">
+                          per contestant
+                        </span>
                       </span>
                     </div>
                   </div>
@@ -189,7 +211,14 @@ export default function NominationResultsDisplay({ title, description, data }: N
                     <div className="mb-6 flex items-start gap-3 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-800 dark:text-amber-300">
                       <Info className="w-5 h-5 flex-shrink-0 text-amber-500 mt-0.5" />
                       <div className="text-xs leading-relaxed">
-                        <span className="font-bold">Single Contestant Category:</span> Requires a benchmark of <span className="font-bold underline decoration-2 decoration-amber-500">160 nominations</span> to unlock this slot for voting.
+                        <span className="font-bold">
+                          Single Contestant Category:
+                        </span>{" "}
+                        Requires a benchmark of{" "}
+                        <span className="font-bold underline decoration-2 decoration-amber-500">
+                          160 nominations
+                        </span>{" "}
+                        to unlock this slot for voting.
                       </div>
                     </div>
                   )}
@@ -199,20 +228,31 @@ export default function NominationResultsDisplay({ title, description, data }: N
                     <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">
                       Contestants ({contestantsCount})
                     </h3>
-                    
+
                     {category.results.map((candidate, idx) => {
-                      const candidateProgress = Math.min((candidate.count / benchmark) * 100, 100);
+                      const candidateProgress = Math.min(
+                        (candidate.count / benchmark) * 100,
+                        100,
+                      );
                       const isCandidateQualified = candidate.count >= benchmark;
-                      const candidateRemaining = Math.max(benchmark - candidate.count, 0);
+                      const candidateRemaining = Math.max(
+                        benchmark - candidate.count,
+                        0,
+                      );
 
                       return (
-                        <div key={candidate.candidateName} className="space-y-2 bg-zinc-50/50 dark:bg-zinc-900/30 border border-zinc-100 dark:border-zinc-800/40 rounded-2xl p-4 transition-all hover:border-zinc-200 dark:hover:border-zinc-700">
+                        <div
+                          key={candidate.candidateName}
+                          className="space-y-2 bg-zinc-50/50 dark:bg-zinc-900/30 border border-zinc-100 dark:border-zinc-800/40 rounded-2xl p-4 transition-all hover:border-zinc-200 dark:hover:border-zinc-700"
+                        >
                           <div className="flex justify-between items-center">
                             <div className="flex items-center gap-2 min-w-0">
                               {idx === 0 && candidate.count > 0 && (
                                 <Trophy className="h-4 w-4 text-yellow-500 flex-shrink-0" />
                               )}
-                              <span className={`font-semibold truncate text-sm sm:text-base ${idx === 0 ? "text-zinc-900 dark:text-white" : "text-zinc-600 dark:text-zinc-400"}`}>
+                              <span
+                                className={`font-semibold truncate text-sm sm:text-base ${idx === 0 ? "text-zinc-900 dark:text-white" : "text-zinc-600 dark:text-zinc-400"}`}
+                              >
                                 {candidate.candidateName}
                               </span>
                             </div>
@@ -231,15 +271,19 @@ export default function NominationResultsDisplay({ title, description, data }: N
                           </div>
 
                           <div className="relative h-2 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                            <div 
-                              className={`absolute inset-y-0 left-0 bg-gradient-to-r ${isCandidateQualified ? 'from-emerald-500 to-teal-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'from-blue-500 to-purple-600'} transition-all duration-1000 ease-out rounded-full`}
+                            <div
+                              className={`absolute inset-y-0 left-0 bg-gradient-to-r ${isCandidateQualified ? "from-emerald-500 to-teal-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" : "from-blue-500 to-purple-600"} transition-all duration-1000 ease-out rounded-full`}
                               style={{ width: `${candidateProgress}%` }}
                             />
                           </div>
-                          
+
                           <div className="flex justify-between text-[10px] text-zinc-400 font-medium">
-                            <span>{candidateProgress.toFixed(0)}% to target</span>
-                            <span>{candidate.count} / {benchmark} nominations</span>
+                            <span>
+                              {candidateProgress.toFixed(0)}% to target
+                            </span>
+                            <span>
+                              {candidate.count} / {benchmark} nominations
+                            </span>
                           </div>
                         </div>
                       );
@@ -254,7 +298,9 @@ export default function NominationResultsDisplay({ title, description, data }: N
         {filteredData.length === 0 && (
           <div className="text-center py-20 bg-white dark:bg-zinc-900 rounded-3xl border-2 border-dashed border-zinc-200 dark:border-zinc-800 mb-16">
             <TrendingUp className="h-12 w-12 text-zinc-400 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">No categories found</h3>
+            <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">
+              No categories found
+            </h3>
             <p className="text-zinc-500 dark:text-zinc-400">
               Try adjusting your search query.
             </p>
@@ -274,7 +320,7 @@ export default function NominationResultsDisplay({ title, description, data }: N
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Card 1: Total Nominations */}
-            <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:shadow-md transition-shadow">
+            {/* <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:shadow-md transition-shadow">
               <div className="absolute right-4 top-4 bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 p-3 rounded-2xl">
                 <TrendingUp className="h-6 w-6" />
               </div>
@@ -287,7 +333,7 @@ export default function NominationResultsDisplay({ title, description, data }: N
               <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2">
                 Total nominations submitted across all categories.
               </p>
-            </div>
+            </div> */}
 
             {/* Card 2: Candidates Qualified */}
             <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:shadow-md transition-shadow">
@@ -298,12 +344,15 @@ export default function NominationResultsDisplay({ title, description, data }: N
                 Candidates Qualified
               </p>
               <h3 className="text-4xl font-extrabold text-zinc-900 dark:text-white mt-2">
-                {stats.candidatesQualified} <span className="text-lg font-medium text-zinc-400">/ {stats.totalCandidatesCount}</span>
+                {stats.candidatesQualified}{" "}
+                <span className="text-lg font-medium text-zinc-400">
+                  / {stats.totalCandidatesCount}
+                </span>
               </h3>
               {/* mini progress indicator */}
               <div className="w-full h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full mt-4 overflow-hidden">
-                <div 
-                  className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-1000" 
+                <div
+                  className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-1000"
                   style={{ width: `${stats.qualifiedPercentage}%` }}
                 />
               </div>
@@ -318,13 +367,18 @@ export default function NominationResultsDisplay({ title, description, data }: N
                 Empty Categories
               </p>
               <h3 className="text-4xl font-extrabold text-zinc-900 dark:text-white mt-2">
-                {stats.unnominatedCount} <span className="text-lg font-medium text-zinc-400">/ {data.length}</span>
+                {stats.unnominatedCount}{" "}
+                <span className="text-lg font-medium text-zinc-400">
+                  / {data.length}
+                </span>
               </h3>
               {/* mini progress indicator */}
               <div className="w-full h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full mt-4 overflow-hidden">
-                <div 
-                  className="h-full bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full transition-all duration-1000" 
-                  style={{ width: `${data.length > 0 ? (stats.unnominatedCount / data.length) * 100 : 0}%` }}
+                <div
+                  className="h-full bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full transition-all duration-1000"
+                  style={{
+                    width: `${data.length > 0 ? (stats.unnominatedCount / data.length) * 100 : 0}%`,
+                  }}
                 />
               </div>
             </div>
@@ -354,7 +408,8 @@ export default function NominationResultsDisplay({ title, description, data }: N
               Unnominated Categories ({stats.unnominatedCount})
             </h2>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-2 max-w-xl mx-auto leading-relaxed">
-              These categories currently have no nominees. Users can submit nominations in these categories to activate them!
+              These categories currently have no nominees. Users can submit
+              nominations in these categories to activate them!
             </p>
             <div className="flex flex-wrap justify-center gap-2 mt-8 max-w-4xl mx-auto">
               {stats.unnominatedList.map((catName) => (
