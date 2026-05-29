@@ -61,7 +61,8 @@ const femaleNames = [
   "Udoji", // Emmanuella
   "Halli", // Elizabeth
   "Kyrian", // Regina
-  "Atsaakaa", // Emmanuella
+  "Atsaakaa",
+  "Promise-diamond", // Emmanuella
 ];
 
 const maleNames = [
@@ -154,7 +155,8 @@ function inferGender(firstname: string, otherNames: string): "male" | "female" {
     combined.includes("annorah") ||
     combined.includes("hellen") ||
     combined.includes("miracle") ||
-    combined.includes("gladys")
+    combined.includes("gladys") ||
+    combined.includes("diamond")
   ) {
     return "female";
   }
