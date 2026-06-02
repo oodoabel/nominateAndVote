@@ -322,7 +322,7 @@ export default function NominationResultsDisplay({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Card 1: Total Nominations */}
-            <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:shadow-md transition-shadow">
+            {/* <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:shadow-md transition-shadow">
               <div className="absolute right-4 top-4 bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 p-3 rounded-2xl">
                 <TrendingUp className="h-6 w-6" />
               </div>
@@ -336,7 +336,7 @@ export default function NominationResultsDisplay({
               <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2">
                 Total nominations submitted across all categories.
               </p>
-            </div>
+            </div> */}
 
             {/* Card 2: Candidates Qualified */}
             <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:shadow-md transition-shadow">
