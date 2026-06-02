@@ -2920,7 +2920,7 @@ export const excellersData = [
     hobby: "Volleyball",
     favBibleVerse:
       "Be strong and courageous. Do not be afraid, do not be discouraged, for the Lord your God will be with you where you go….. Joshua 1:9",
-    forumPaddy: "Alexander and Yayock",
+    forumPaddy: "Alexander, Yayock and Obed",
     forumCrush: "Mimi",
     department: "Materials and Metallurgical engineering",
     nfcsSocieties: "Altar Knight, Talent Theatre",
