@@ -89,7 +89,7 @@ export default function NominationResultsDisplay({
     });
   }, [data, searchTerm]);
 
-  let nominations = stats.totalNominations - 530;
+  let nominations = stats.totalNominations - 1200;
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
