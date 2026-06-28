@@ -3222,17 +3222,7 @@ export const seedNominations = [
     status: "success",
     createdAt: new Date("May 21, 2026 08:33:52 AM"),
   },
-  {
-    voterName: "Bombson",
-    voterEmail: "bombson01@gmail.com",
-    candidateName: "Johnson Adams",
-    awardCategory: "Most expensive",
-    nominationCount: 10,
-    amountPaid: 1000,
-    reference: "T043245012787458",
-    status: "success",
-    createdAt: new Date("May 21, 2026 08:38:57 AM"),
-  },
+
   {
     voterName: "Elaigwuenoch",
     voterEmail: "elaigwuenoch@gmail.com",

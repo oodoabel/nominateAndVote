@@ -33,7 +33,6 @@ export const awardCategories: AwardCategory[] = [
   { id: 25, name: "Sportswoman of the year", gender: "female" },
   { id: 27, name: "Mr Culture", gender: "male" },
   { id: 28, name: "Miss Culture", gender: "female" },
-  { id: 29, name: "Most expensive", gender: "all" },
   { id: 30, name: "Most talented", gender: "all" },
   { id: 31, name: "Music personality of the year", gender: "all" },
 ];
