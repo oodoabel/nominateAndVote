@@ -2,6 +2,7 @@ import { getAppState } from "@/lib/appConfig";
 import { AppState } from "@prisma/client";
 import { redirect } from "next/navigation";
 import VoteClient from "./VoteClient";
+import { getQualifiedCategories } from "@/data/qualifiedCandidates";
 
 export default async function VotePage() {
   const appState = await getAppState();
@@ -10,5 +11,7 @@ export default async function VotePage() {
     redirect("/");
   }
 
-  return <VoteClient />;
+  const qualifiedCategories = await getQualifiedCategories();
+
+  return <VoteClient qualifiedCategories={qualifiedCategories} />;
 }

@@ -313,8 +313,9 @@ export const excellersData = [
     partingWords:
       "Always do the right THINGS, at the right TIMES, with the right PEOPLE,for the right PURPOSE, at the right PLACE.",
     japaOrStay: "Japa",
-    photoUrl:
-      "https://drive.google.com/open?id=1HENzZWzVMSeLIotuf1J840CgcB4ECx7v",
+    photoUrl: "/okorie.jpeg",
+    // photoUrl:
+    // "https://drive.google.com/open?id=1HENzZWzVMSeLIotuf1J840CgcB4ECx7v",
   },
   {
     timestamp: "2026-03-04 08:27:54.478000",

@@ -7,7 +7,7 @@ import {
   Vote as VoteIcon, Trophy, Edit2, Loader2, PartyPopper, Mail, AlertCircle, ShieldCheck,
 } from "lucide-react";
 import { candidates } from "@/data/candidates";
-import { qualifiedCategories, type QualifiedCategory } from "@/data/qualifiedCandidates";
+import type { QualifiedCategory } from "@/data/qualifiedCandidates";
 
 interface VoteSelection {
   categoryName: string;
@@ -128,7 +128,11 @@ function ReviewCard({ selection, onEdit }: { selection: VoteSelection; onEdit: (
 }
 
 // ─── Main page ────────────────────────────────────────────────────────────────
-export default function VotePage() {
+export default function VotePage({
+  qualifiedCategories,
+}: {
+  qualifiedCategories: QualifiedCategory[];
+}) {
   const [step, setStep] = useState<0 | 1 | 2 | 3>(0);
   const [email, setEmail] = useState("");
   const [verifying, setVerifying] = useState(false);
@@ -142,7 +146,7 @@ export default function VotePage() {
   // Only show categories this voter hasn't voted in yet
   const remainingCategories = useMemo(
     () => qualifiedCategories.filter((c) => !alreadyVoted.some((v) => v.awardCategory === c.categoryName)),
-    [alreadyVoted]
+    [qualifiedCategories, alreadyVoted]
   );
 
   const totalRemaining = remainingCategories.length;
@@ -254,8 +258,29 @@ export default function VotePage() {
 
   // ── Step 1: Select (remaining categories only) ──────────────────────────
   if (step === 1) {
+    // Edge case: no qualified categories/candidates at all
+    if (qualifiedCategories.length === 0) {
+      return (
+        <div className="w-full max-w-md mx-auto px-4 py-10 flex flex-col items-center justify-center min-h-[calc(100vh-5rem)]">
+          <StepBar step={1} />
+          <div className="w-full bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-2xl p-8 text-center">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-amber-500/30">
+              <Trophy className="w-10 h-10 text-white" />
+            </div>
+            <h2 className="text-2xl font-extrabold text-zinc-900 dark:text-white mb-3">Voting Not Started</h2>
+            <p className="text-zinc-500 dark:text-zinc-400 mb-6">
+              No candidates have qualified for voting yet. Please check back later once nominations are verified and shortlisted.
+            </p>
+            <button onClick={() => window.location.href = "/"} className="w-full bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-900 font-bold py-3 px-6 rounded-xl transition-colors">
+              Return to Home
+            </button>
+          </div>
+        </div>
+      );
+    }
+
     // Edge case: voter has already completed all categories
-    if (totalRemaining === 0) {
+    if (qualifiedCategories.length > 0 && totalRemaining === 0) {
       return (
         <div className="w-full max-w-md mx-auto px-4 py-10 flex flex-col items-center justify-center min-h-[calc(100vh-5rem)]">
           <StepBar step={3} />
